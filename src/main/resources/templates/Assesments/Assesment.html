@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html class="fixed" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="template :: head"></head>
+<body class="body">
+<header class="header" th:replace="template :: header"></header>
+<div class="inner-wrapper" th:replace ="template :: sidebar"></div>
+<header class="page-header" th:fragment="title-bar">
+    <h2>Assesment Records</h2>
+
+    <div class="right-wrapper pull-right">
+        <ol class="breadcrumbs">
+            <li>
+                <a href="index.html">
+                    <i class="fa fa-home"></i>
+                </a>
+            </li>
+            <li><span>Assesment Record</span></li>
+            <li><span>Section</span></li>
+        </ol>
+
+        <a class="sidebar-right-toggle" data-open="sidebar-right"><i class="fa fa-chevron-left"></i></a>
+    </div>
+</header>
+
+<div th:replace="template :: javascript-botom"></div>
+</body>
+</html>
