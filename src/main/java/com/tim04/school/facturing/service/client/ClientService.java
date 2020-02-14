@@ -42,4 +42,9 @@ public class ClientService {
     public Client getClient(){
         return clientRepository.findByName("bog");
     }
+
+    @Transactional
+    public void save(Client client) {
+         clientRepository.save(client);
+    }
 }

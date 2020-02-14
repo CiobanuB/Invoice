@@ -1,17 +1,20 @@
 <!DOCTYPE html>
-<html  xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head th:fragment="head">
     <title>test</title>
 </head>
 <body>
+<form th:action="@{/getAll}" th:object="${client}" method="post">
+    <input type="text" th:field="*{name}">
+    <input type="text" th:field="*{regDate}">
+    <input type="text" th:field="*{mail}">
+    <input type="number" th:field="*{cif}">
+    <input type="text" th:field="*{contactPerson}">
+    <button type="submit" value="Submit">post</button>
+</form>
+<h1 th:text="'My client ' + ${client.name} + ' has ' + ${client.cif} + ' cif'"></h1>
 <p>Test tanananaa</p>
 
-<div>
-<ul>
-    <li th:each="client: ${clients}">
-        <span th:text="${client.getMail()}"></span>
-    </li>
-</ul>
-</div>
+
 </body>
 </html>

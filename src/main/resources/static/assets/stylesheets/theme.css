@@ -3007,6 +3007,19 @@ html.dark .text-muted {
 .text-success {
 	color: #47a447 !important;
 }
+.success-message{
+    color: #47a447 ;
+    font-size: 20px;
+    font-weight: 1400;
+    padding: 12px 0px 8px 0px;
+}
+.failure-message{
+    color: #f20e0e ;
+    font-size: 20px;
+    font-weight: 1400;
+    padding: 12px 0px 8px 0px;
+}
+
 
 .text-warning {
 	color: #ed9c28 !important;

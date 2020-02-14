@@ -23,7 +23,7 @@ public class Client {
     @Column(name = "contactPerson")
     private String contactPerson;
 
-    public Long getClientID() {
+   public Long getClientID() {
         return clientID;
     }
 

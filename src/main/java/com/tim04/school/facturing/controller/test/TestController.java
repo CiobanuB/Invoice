@@ -5,9 +5,7 @@ import com.tim04.school.facturing.service.client.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
@@ -30,7 +28,7 @@ public class TestController {
 
     }
 
-    @GetMapping("getAll")
+/*    @GetMapping("/getAll")
     public ModelAndView getAll() {
         List<Client> allClients = clientService.getAll();
         ModelAndView modelAndView = new ModelAndView();
@@ -38,6 +36,25 @@ public class TestController {
         modelAndView.addObject("clients", allClients);
 
         return modelAndView;
+    }*/
 
+    @GetMapping("/getAll")
+    public ModelAndView getAll() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("getAll.html");
+        modelAndView.addObject("client", new Client());
+        return modelAndView;
+    }
+
+
+    @PostMapping("/getAll")
+    public ModelAndView saveClient(@ModelAttribute("client") Client client) {
+        Client newClient = new Client();
+        newClient = client;
+        clientService.save(newClient);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("getAll.html");
+        modelAndView.addObject(client);
+        return modelAndView;
     }
 }

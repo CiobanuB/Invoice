@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class AddEditClients {
     @Autowired
     private ClientService clientService;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping( method = RequestMethod.GET)
     public String getClients(Model model) {
         List<Client> clients = clientService.getAll();
         for (Client client : clients) {
@@ -26,8 +27,11 @@ public class AddEditClients {
         return "Clients/AddEditClients";
     }
 
-    @PostMapping("/saveClient")
-    public String saveClient(@ModelAttribute("client") Client client) {
+    @PostMapping()
+    public String saveClient(@ModelAttribute(value = "client") Client client,Model model) {
+
+        clientService.save(client);
+        System.out.println(client);
         return "Clients/AddEditClients";
     }
 

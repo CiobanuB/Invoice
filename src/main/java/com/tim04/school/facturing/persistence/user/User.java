@@ -1,6 +1,12 @@
 package com.tim04.school.facturing.persistence.user;
 
+import com.tim04.school.facturing.persistence.Role.Role;
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "User")
@@ -10,17 +16,22 @@ public class User {
     @GeneratedValue
     private Long userID;
     @Column(name = "firstName")
+    @NotEmpty(message = "Please insert your First Name")
     private String firstName;
     @Column(name = "lastName")
+    //@NotEmpty(message = "Please insert your Last Name")
     private String lastName;
     @Column(name = "mail")
+    @NotEmpty(message = "Please insert your mail")
     private String mail;
     @Column(name = "password")
+    @NotEmpty(message = "Please insert your password")
     private String password;
     @Column(name = "age")
     private int age;
-    @Column(name = "role")
-    private String role;
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles;
 
     public Long getID() {
         return userID;
@@ -70,11 +81,19 @@ public class User {
         this.age = age;
     }
 
-    public String getRole() {
-        return role;
+    public Long getUserID() {
+        return userID;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setUserID(Long userID) {
+        this.userID = userID;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }
