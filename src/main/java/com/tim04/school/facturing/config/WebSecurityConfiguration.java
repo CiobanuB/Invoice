@@ -34,15 +34,17 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/registration").permitAll();
 
          http.authorizeRequests()
-                .antMatchers("/admin").hasAuthority("ADMIN");
+                .antMatchers("/admin").access("hasRole('ROLE_ADMIN')");
 
-       /* *//*ceva pusca aici*//*
+       /* *//*ceva pusca aici*/
         http.authorizeRequests()
-                .antMatchers("/").hasRole("ADMIN").anyRequest().authenticated();
-*/
+                .antMatchers("/")
+                .access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')");
+
         http.authorizeRequests()
                 .and().formLogin()
                 .defaultSuccessUrl("/")
+                .loginProcessingUrl("/loginSuccess")// submit reuqest
                 .loginPage("/login").failureUrl("/login?error=true")
                 .usernameParameter("username")
                 .passwordParameter("password")
@@ -60,14 +62,15 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .passwordEncoder(bCryptPasswordEncoder);
     }
 
-/*    @Override
+    @Override
     public void configure(WebSecurity web) throws Exception {
         web
                 .ignoring()
                 .antMatchers("/resources/**")
+                .antMatchers("/assets/**")
                 .antMatchers("/templates/**");
 
-    }*/
+    }
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
