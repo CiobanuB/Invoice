@@ -1,6 +1,7 @@
 package com.tim04.school.facturing.user;
 
 import com.tim04.school.facturing.persistence.Role.Role;
+import com.tim04.school.facturing.persistence.Role.RoleRepository;
 import com.tim04.school.facturing.persistence.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,26 +24,22 @@ public class MyUserDetailService implements UserDetailsService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String mail) throws UsernameNotFoundException  {
+    public UserDetails loadUserByUsername(String mail) throws UsernameNotFoundException { // this method is implicit called by security plugin
         User user = userService.findUserByEmail(mail);
-        List<GrantedAuthority> authorities = getUserAuthority(user.getRoles());
-        System.out.println(authorities);
-        return buildUserForAuthentication(user, authorities);
-    }
-
-    private List<GrantedAuthority> getUserAuthority(Set<Role> userRoles) {
-        Set<GrantedAuthority> roles = new HashSet<GrantedAuthority>();
-        for (Role role : userRoles) {
-            roles.add(new SimpleGrantedAuthority(role.getRole()));
+        if (null == user) {
+            System.out.println("User not found:" + mail);
+            throw new UsernameNotFoundException("User not found:" + mail);
         }
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>(roles);
-        return grantedAuthorities;
+        System.out.println(mail + " is found in database!");
+        List<GrantedAuthority> grantedList = new ArrayList<>();
+
+        for (Role role : user.getRoles()) {
+            grantedList.add(new SimpleGrantedAuthority(role.getName()));
+        }
+
+        UserDetails userDetails = new org.springframework.security.core.userdetails.User(user.getMail(),
+                user.getPassword(), grantedList);
+
+        return userDetails;
     }
-
-    private UserDetails buildUserForAuthentication(User user, List<GrantedAuthority> authorities) {
-        return new org.springframework.security.core.userdetails.User(user.getMail(), user.getPassword(),
-                true, true, true, true, authorities);
-    }
-
-
 }

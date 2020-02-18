@@ -33,26 +33,33 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login").permitAll()
                 .antMatchers("/registration").permitAll();
 
-         http.authorizeRequests()
-                .antMatchers("/admin").access("hasRole('ROLE_ADMIN')");
+        http
+                .authorizeRequests()
+                .antMatchers("/")
+                .access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')");
+  /*      http
+                .authorizeRequests()
+                .antMatchers("/admin")
+                .access("hasRole('ROLE_ADMIN')");*/
 
-       /* *//*ceva pusca aici*/
         http.authorizeRequests()
                 .antMatchers("/")
                 .access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')");
 
         http.authorizeRequests()
-                .and().formLogin()
-                .defaultSuccessUrl("/")
-                .loginProcessingUrl("/loginSuccess")// submit reuqest
-                .loginPage("/login").failureUrl("/login?error=true")
-                .usernameParameter("username")
+                .and()
+                .formLogin()
+                .loginProcessingUrl("/login_securely")// submit request ( binding cu formularul din formular este facut aici )
+                .loginPage("/login")
+                .defaultSuccessUrl("/Invoice")
+                .usernameParameter("mail")
                 .passwordParameter("password")
                 //configure logout
-                .and().logout()
+                .and()
+                .logout()
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/login").and().exceptionHandling()
-                .accessDeniedPage("/access-denied");
+                .logoutSuccessUrl("/logout")
+                .permitAll();
     }
 
     @Override

@@ -14,6 +14,7 @@ public class User {
 
     @Id
     @GeneratedValue
+    @Column(name = "USER_ID")
     private Long userID;
     @Column(name = "firstName")
     @NotEmpty(message = "Please insert your First Name")
@@ -29,8 +30,11 @@ public class User {
     private String password;
     @Column(name = "age")
     private int age;
-    @ManyToMany(cascade = CascadeType.MERGE)
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    //TODO: Documentare despre FetchType EAGER vs LAZY
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "USER_ROLE",
+            joinColumns = { @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID") }, inverseJoinColumns = {
+            @JoinColumn(name = "ROLE_ID", referencedColumnName = "ROLE_ID") })
     private Set<Role> roles;
 
     public Long getID() {

@@ -27,14 +27,14 @@ public class SignController {
         return "Signing/Sign-in.html";
     }
 
-    @PostMapping("/login")
-    public ModelAndView login(@ModelAttribute User user) {
-        ModelAndView modelAndView = new ModelAndView();
-
-        modelAndView.addObject("user", user);
-        modelAndView.setViewName("Signing/Sign-in");
-        return modelAndView;
-    }
+//    @PostMapping("/login")
+//    public ModelAndView login(@ModelAttribute User user) {
+//        ModelAndView modelAndView = new ModelAndView();
+//
+//        modelAndView.addObject("user", user);
+//        modelAndView.setViewName("Signing/Sign-in");
+//        return modelAndView;
+//    }
 
     @GetMapping("/Sign-up")
     public ModelAndView signUp() {
@@ -65,4 +65,11 @@ public class SignController {
         }
         return modelAndView;
     }
+    @GetMapping("/logout")
+    public ModelAndView logout() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("result");
+        return modelAndView;
+    }
+
 }

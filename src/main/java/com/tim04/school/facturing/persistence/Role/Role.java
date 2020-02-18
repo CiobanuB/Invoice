@@ -1,46 +1,54 @@
 package com.tim04.school.facturing.persistence.Role;
 
+import com.tim04.school.facturing.persistence.user.User;
+
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "roles")
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "role_id")
-    private int id;
-    @Column(name = "role")
-    private String role;
+    @Column(name = "ROLE_ID")
+    private long id;
+
+    @Column(name = "ROLE_NAME")
+    private String name;
+
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users;
 
     public Role() {
     }
 
-    public Role(int id, String role) {
+    public Role(long id, String name, Set<User> users) {
         this.id = id;
-        this.role = role;
+        this.name = name;
+        this.users = users;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public String getRole() {
-        return role;
+    public String getName() {
+        return name;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    @Override
-    public String toString() {
-        return "Role{" +
-                "id=" + id +
-                ", role='" + role + '\'' +
-                '}';
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 }
