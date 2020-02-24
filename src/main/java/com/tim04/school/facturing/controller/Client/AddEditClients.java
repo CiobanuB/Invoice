@@ -18,21 +18,24 @@ public class AddEditClients {
     private ClientService clientService;
 
     @RequestMapping( method = RequestMethod.GET)
-    public String getClients(Model model) {
+    public ModelAndView getClients() {
+        ModelAndView modelAndView = new ModelAndView();
         List<Client> clients = clientService.getAll();
         for (Client client : clients) {
             System.out.println(client.toString());
         }
-        model.addAttribute("clients", clients);
-        return "Clients/AddEditClients";
+        modelAndView.setViewName("Clients/AddEditClients");
+        modelAndView.addObject("clients",clients);
+        return modelAndView;
     }
 
     @PostMapping()
-    public String saveClient(@ModelAttribute(value = "client") Client client,Model model) {
-
+    public ModelAndView saveClient(@ModelAttribute(value = "client") Client client) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("Clients/AddEditClients");
         clientService.save(client);
         System.out.println(client);
-        return "Clients/AddEditClients";
+        return modelAndView;
     }
 
 }

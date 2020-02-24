@@ -3013,6 +3013,11 @@ html.dark .text-muted {
     font-weight: 1400;
     padding: 12px 0px 8px 0px;
 }
+.error-message{
+color: #f20e0e ;
+ font-size: 12px;
+ font-weight: 1400;
+}
 .failure-message{
     color: #f20e0e ;
     font-size: 20px;

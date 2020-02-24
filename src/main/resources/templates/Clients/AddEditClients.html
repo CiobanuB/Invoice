@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html class="fixed" lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:fragment="head">
+<head>
     <meta charset="UTF-8">
     <title>Invoice Website</title>
     <meta name="keywords" content="Invoice website for companies"/>
@@ -84,15 +84,9 @@
                         <th>Actions</th>
                     </tr>
                     </thead>
-                    <tbody  >
-                    <form action="/add-edit-clients"  th:object="${client}" method="post">
-                        <input type="text" name="name" th:field="*{name}">
-                        <input type="text" name="regDate" th:field="*{regDate}">
-                        <input type="text" name="mail" th:field="*{mail}">
-                        <input type="text" name="cif" th:field="*{cif}">
-                        <input type="text" name="contactPerson" th:field="*{contactPerson}">
-                        <button type="submit" value="Save">post</button>
-                    </form>
+                    <tbody>
+
+
                     <tr class="gradeX" th:each="client : ${clients}" method="GET">
                         <td th:text="${client.getName()}">Default</td>
                         <td th:text="${client.getRegDate()}">Default</td>
@@ -101,13 +95,22 @@
                         <td th:text="${client.getAdress()}">Default</td>
                         <td th:text="${client.getContactPerson()}">Default</td>
 
-                        <td class="actions">
-                            <a href="#" class="hidden on-editing save-row"><i class="fa fa-save"></i></a>
-                            <a href="#" class="hidden on-editing cancel-row"><i class="fa fa-times"></i></a>
-                            <a href="#" class="on-default edit-row"><i class="fa fa-pencil"></i></a>
-                            <a href="#" class="on-default remove-row"><i class="fa fa-trash-o"></i></a>
-                        </td>
+                        <form th:action="@{/add-edit-clients}" th:object="${client}" method="post">
+                            <input type="text" name="name" th:field="*{name}">
+                            <input type="text" name="regDate" th:field="*{regDate}">
+                            <input type="text" name="mail" th:field="*{mail}">
+                            <input type="text" name="cif" th:field="*{cif}">
+                            <input type="text" name="contactPerson" th:field="*{contactPerson}">
+                            <!--<td class="actions">
+                                <a href="#" class="hidden on-editing save-row"><i class="fa fa-save"></i></a>
+                                <a href="#" class="hidden on-editing cancel-row"><i class="fa fa-times"></i></a>
+                                <a href="#" class="on-default edit-row"><i class="fa fa-pencil"></i></a>
+                                <a href="#" class="on-default remove-row"><i class="fa fa-trash-o"></i></a>
+                            </td>-->
+                        </form>
                     </tr>
+
+
 
                     </tbody>
                 </table>

@@ -52,19 +52,17 @@ public class SignController {
         if (existingUser != null) {
             bindingResult.rejectValue("mail", "error.user", "There is another mail registered ! ");
         }
-
         if (bindingResult.hasErrors()) {
             modelAndView.setViewName("Signing/Sign-up");
         } else {
             userService.saveUser(user);
             modelAndView.addObject("successMessage", "User has been created succesfully !");
-
             modelAndView.addObject("user", new User());
             modelAndView.setViewName("Signing/Sign-up");
-
         }
         return modelAndView;
     }
+
     @GetMapping("/logout")
     public ModelAndView logout() {
         ModelAndView modelAndView = new ModelAndView();

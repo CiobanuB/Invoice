@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html class="fixed" lang="en" xmlns:th="http://www.thymeleaf.org"   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:fragment="head">
+<head th:fragment="head" th:remove="tag">
     <meta charset="UTF-8">
     <title>Invoice Website</title>
-    <meta name="keywords" content="Invoice website for companies"/>
-    <meta name="description" content="Invoice website for companies">
-    <meta name="author" content="Ciobanu Bogdan">
+
     <!-- Mobile Metas -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <!-- Web Fonts  -->
@@ -16,9 +14,6 @@
     <link rel="stylesheet" href="assets/vendor/font-awesome/css/font-awesome.css"/>
     <link rel="stylesheet" href="assets/vendor/magnific-popup/magnific-popup.css"/>
     <link rel="stylesheet" href="assets/vendor/bootstrap-datepicker/css/datepicker3.css"/>
-    <!-- Specific Page Vendor CSS -->
-
-
     <!-- Theme CSS -->
     <link rel="stylesheet" href="assets/stylesheets/theme.css"/>
 
@@ -31,6 +26,7 @@
     <!-- Head Libs -->
     <script src="assets/vendor/modernizr/modernizr.js" type="text/javascript"></script>
 </head>
+<body>
 <header class="header" th:fragment="header">
     <div class="logo-container">
         <a href="../" class="logo">
@@ -77,8 +73,7 @@
                 <ul class="list-unstyled">
                     <li class="divider"></li>
                     <li>
-                        <a role="menuitem" tabindex="-1" th:href="@{/my-profile}"><i class="fa fa-user"></i> My
-                            Profile</a>
+                        <a role="menuitem" tabindex="-1" href="my-profile"><i class="fa fa-user"></i> My Profile</a>
                     </li>
                     <li>
                         <a role="menuitem" tabindex="-1" href="#" data-lock-screen="true"><i class="fa fa-lock"></i>
@@ -171,7 +166,7 @@
         </div>
     </aside>
 </div>
-<header class="page-header" th:fragment="title-bar">
+<header class="page-header" >
     <h2>Dashboard Client</h2>
 
     <div class="right-wrapper pull-right">
@@ -262,7 +257,7 @@
     </section>
     <!-- end: page -->
 </section>
-<div th:fragment="javascript-botom">
+<div th:fragment="javascript-botom" th:remove="tag">
     <!-- Vendor -->
     <script src="assets/vendor/jquery/jquery.js"></script>
     <script src="assets/vendor/jquery-browser-mobile/jquery.browser.mobile.js"></script>
@@ -271,8 +266,6 @@
     <script src="assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
     <script src="assets/vendor/magnific-popup/magnific-popup.js"></script>
     <script src="assets/vendor/jquery-placeholder/jquery.placeholder.js"></script>
-
-
 
     <!-- Theme Base, Components and Settings -->
     <script src="assets/javascripts/theme.js"></script>
@@ -284,4 +277,5 @@
     <script src="assets/javascripts/theme.init.js"></script>
 
 </div>
+</body>
 </html>

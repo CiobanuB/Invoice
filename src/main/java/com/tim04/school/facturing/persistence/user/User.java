@@ -29,7 +29,7 @@ public class User {
     @NotEmpty(message = "Please insert your password")
     private String password;
     @Column(name = "age")
-    private int age;
+    private Integer age;
     //TODO: Documentare despre FetchType EAGER vs LAZY
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "USER_ROLE",
@@ -77,14 +77,6 @@ public class User {
         this.password = password;
     }
 
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
     public Long getUserID() {
         return userID;
     }
@@ -99,5 +91,13 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
     }
 }
