@@ -65,10 +65,12 @@
                 <h4 class="panel-title">Set default folder</h4>
             </header>
             <div class="panel-body">
-                <div class="row"> <p>testing</p></div>
-                <form action = "#" th:action = "@{/invoiceDetails}" th:object="${generateInvoice}" method="GET">
-                    <input type="text" name="">
+                <div class="row">
+                <form th:action = "@{/Invoice}" th:object="${user}" method="post" onsubmit="return validation();">
+                    <p class="panel-title margins">Please insert your default path ( Full path required ) :</p> <input type="text" class="text-center col-md-4 margins " id="getPath" th:field="*{defaultPath}">
+                    <button type="submit" class="margins btn btn-primary">Save</button>
                 </form>
+                </div>
             </div>
 
         </section>
@@ -138,5 +140,6 @@
 
 <!-- Examples -->
 <script src="assets/javascripts/tables/examples.datatables.editable.js"></script>
+<script src="assets/javascripts/customs/InvoiceCustom.js"></script>
 </body>
 </html>

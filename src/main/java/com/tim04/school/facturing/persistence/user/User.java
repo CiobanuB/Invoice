@@ -30,6 +30,8 @@ public class User {
     private String password;
     @Column(name = "age")
     private Integer age;
+    @Column(name = "path")
+    private String defaultPath;
     //TODO: Documentare despre FetchType EAGER vs LAZY
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "USER_ROLE",
@@ -99,5 +101,13 @@ public class User {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    public String getDefaultPath() {
+        return defaultPath;
+    }
+
+    public void setDefaultPath(String defaultPath) {
+        this.defaultPath = defaultPath;
     }
 }

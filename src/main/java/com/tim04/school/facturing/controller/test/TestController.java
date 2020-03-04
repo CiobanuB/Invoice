@@ -28,16 +28,6 @@ public class TestController {
 
     }
 
-/*    @GetMapping("/getAll")
-    public ModelAndView getAll() {
-        List<Client> allClients = clientService.getAll();
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("getAll.html");
-        modelAndView.addObject("clients", allClients);
-
-        return modelAndView;
-    }*/
-
     @GetMapping("/getAll")
     public ModelAndView getAll() {
         ModelAndView modelAndView = new ModelAndView();

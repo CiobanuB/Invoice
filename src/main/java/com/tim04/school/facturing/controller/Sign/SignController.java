@@ -66,7 +66,7 @@ public class SignController {
     @GetMapping("/logout")
     public ModelAndView logout() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("result");
+        modelAndView.setViewName("Signing/login");
         return modelAndView;
     }
 

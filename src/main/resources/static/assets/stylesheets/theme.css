@@ -14604,6 +14604,10 @@ html.dark .CodeMirror pre {
 	right: 0;
 	top: 2px;
 }
+.margins {
+    margin-left: 15px;
+    margin-top: 15px;
+ }
 .list-markers .location-action.location-edit {
 	right: 15px;
 	top: 3px;
@@ -15370,6 +15374,10 @@ html.dark .invoice table.table > tbody tr > td {
 	color: #CCC;
 	position: relative;
 	z-index: 3;
+}
+.panel-invoice {
+.panel-invoice {
+    padding : 40px
 }
 .body-sign .line-thru:before {
 	background-color: #FFF;

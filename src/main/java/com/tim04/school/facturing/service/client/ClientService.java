@@ -29,10 +29,7 @@ public class ClientService {
         theClient.setUserID(userID);
         clientRepository.save(theClient);
     }
-/*    @Transactional(readOnly = true)
-    public List<Client> findAll(){
-       return clientRepository.findAll();
-    }*/
+
 
     @Transactional(readOnly = true)
     public List<Client> getAll(){

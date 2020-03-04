@@ -5,22 +5,35 @@ import com.tim04.school.facturing.persistence.client.ClientRepository;
 import com.tim04.school.facturing.persistence.invoice.Invoice;
 import com.tim04.school.facturing.persistence.invoice.InvoiceRepository;
 import com.tim04.school.facturing.persistence.user.User;
+import com.tim04.school.facturing.service.client.ClientService;
+import com.tim04.school.facturing.user.UserService;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ResourceUtils;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.*;
 
+import static org.apache.logging.log4j.util.LambdaUtil.getAll;
+
 @Repository
+@RequestMapping("/Invoice")
 public class InvoiceService {
     private final InvoiceRepository invoiceRepository;
 
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private ClientService clientService;
 
     @Autowired
     public InvoiceService(InvoiceRepository invoiceRepository) {
@@ -56,11 +69,28 @@ public class InvoiceService {
         return theList;
     }
 
-    public String generateReport() {
+    public void generateClientFolder(String path)
+    {
+        File file = new File(path);
+        List<Client> clientList =  clientService.getAll();
+        for ( Client client: clientList) {
+            for (File theFile : file.listFiles()) {
+                if(theFile.isDirectory() && !theFile.getName().equals(client.getName())) {
+                    File newFile = new File (path +"\\"+ client.getName());
+
+                }
+
+            }
+
+        }
+    }
+
+
+    public String generateReport(String path) {
         try {
 
             List<Invoice> employees = invoiceRepository.findAll();
-            String path = "C:\\Users\\Ciobanu\\Desktop\\pdfs\\";
+            String thePath = path;
 
 
             // Compile the Jasper report from .jrxml to .japser
@@ -89,11 +119,11 @@ public class InvoiceService {
                     jrBeanCollectionDataSource);
 
             // Export the report to a PDF file
-            JasperExportManager.exportReportToPdfFile(jasperPrint, path + "\\Emp-Rpt-Database.pdf");
+            JasperExportManager.exportReportToPdfFile(jasperPrint, thePath + "\\Emp-Rpt-Database22.pdf");
 
             System.out.println("Done");
 
-            return "Report successfully generated @path= " + path;
+            return "Report successfully generated @path= " + thePath;
         } catch (Exception e) {
             e.printStackTrace();
             return "Error--> check the console log";
