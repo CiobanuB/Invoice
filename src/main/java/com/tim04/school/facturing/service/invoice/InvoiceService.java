@@ -11,6 +11,7 @@ import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -25,8 +26,7 @@ import java.util.*;
 
 import static org.apache.logging.log4j.util.LambdaUtil.getAll;
 
-@Repository
-@RequestMapping("/Invoice")
+@Service
 public class InvoiceService {
     private final InvoiceRepository invoiceRepository;
 
@@ -72,16 +72,19 @@ public class InvoiceService {
     public void generateClientFolder(String path)
     {
         File file = new File(path);
-        List<Client> clientList =  clientService.getAll();
+        User user = userService.findLogged();
+        List<Client> clientList =  clientService.findByUserID();
         for ( Client client: clientList) {
+            boolean flag = false;
             for (File theFile : file.listFiles()) {
-                if(theFile.isDirectory() && !theFile.getName().equals(client.getName())) {
-                    File newFile = new File (path +"\\"+ client.getName());
-
+                if(theFile.isDirectory() && theFile.getName().equals(client.getName())) {
+                    flag= true;
                 }
-
             }
-
+            if(!flag){
+                File newFile = new File(path + "\\" + client.getName());
+                newFile.mkdir();
+            }
         }
     }
 
@@ -90,14 +93,13 @@ public class InvoiceService {
         try {
 
             List<Invoice> employees = invoiceRepository.findAll();
+            List<Client> clients = clientService.findByUserID();
             String thePath = path;
 
 
             // Compile the Jasper report from .jrxml to .japser
-            InputStream stream = this.getClass().getResourceAsStream("/InvoiceClient.jrxml");
+            InputStream stream = this.getClass().getResourceAsStream("/MainInvoice.jrxml");
             JasperReport jasperReport = JasperCompileManager.compileReport(stream);
-
-
             // Add parameters
             Map<String, Object> parameters = new HashMap<>();
             List<Map<String, Object>> objects = new ArrayList<>();
@@ -106,9 +108,17 @@ public class InvoiceService {
                 Map<String, Object> item = new HashMap<String, Object>();
                 item.put("InvoiceID", invoice.getInvoiceID());
                 item.put("services", invoice.getServices());
-//                item.put("price", invoice.getPrice());
-//                item.put("quantity", invoice.getQuantity());
-//                item.put("categoryName", invoice.getCategoryName());
+               item.put("price", invoice.getTotalPrice());
+              item.put("quantity", invoice.getPieces());
+              item.put("quantity", invoice.getUnityMeasure());
+                objects.add(item);
+            }
+            for (Client client : clients) {
+                Map<String, Object> item = new HashMap<String, Object>();
+                item.put("clientName", client.getName());
+                item.put("clientCif", client.getCif());
+                item.put("clientRegDate", client.getRegDate());
+                item.put("clientAdress", client.getAdress());
                 objects.add(item);
             }
             // Get your data source
@@ -119,7 +129,7 @@ public class InvoiceService {
                     jrBeanCollectionDataSource);
 
             // Export the report to a PDF file
-            JasperExportManager.exportReportToPdfFile(jasperPrint, thePath + "\\Emp-Rpt-Database22.pdf");
+            JasperExportManager.exportReportToPdfFile(jasperPrint, thePath + "\\testing.pdf");
 
             System.out.println("Done");
 

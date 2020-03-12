@@ -2,7 +2,9 @@ package com.tim04.school.facturing.service.client;
 
 import com.tim04.school.facturing.persistence.client.Client;
 import com.tim04.school.facturing.persistence.client.ClientRepository;
+import com.tim04.school.facturing.persistence.user.User;
 import com.tim04.school.facturing.persistence.user.UserRepository;
+import com.tim04.school.facturing.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +14,9 @@ import java.util.List;
 @Service
 public class ClientService {
     private final ClientRepository clientRepository;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     public ClientService(ClientRepository clientRepository) {
@@ -32,8 +37,10 @@ public class ClientService {
 
 
     @Transactional(readOnly = true)
-    public List<Client> getAll(){
-        return clientRepository.findAll();
+    public List<Client> findByUserID(){
+        User user  = userService.findLogged();
+
+        return clientRepository.findByUserID(user.getUserID());
     }
     @Transactional(readOnly = true)
     public Client getClient(){

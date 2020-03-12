@@ -5,7 +5,6 @@ import com.tim04.school.facturing.persistence.invoice.Invoice;
 import com.tim04.school.facturing.persistence.user.User;
 import com.tim04.school.facturing.service.client.ClientService;
 import com.tim04.school.facturing.service.invoice.InvoiceService;
-import com.tim04.school.facturing.service.supplier.SupplierService;
 import com.tim04.school.facturing.user.UserService;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -58,10 +57,10 @@ public class InvoiceController {
         ModelAndView modelAndView = new ModelAndView();
         System.out.println(path);
         User user = userService.findLogged();
-
             invoiceService.generateClientFolder(path);
             user.setDefaultPath(path);
             userService.updateUser(user);
+            invoiceService.generateReport(path);
             modelAndView.addObject("user", user);
         modelAndView.setViewName("Invoice/Invoice");
         return modelAndView;

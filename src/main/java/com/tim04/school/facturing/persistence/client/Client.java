@@ -17,7 +17,7 @@ public class Client {
     @Column(name = "mail")
     private String mail;
     @Column(name = "cif")
-    private int cif;
+    private Integer cif;
     @Column(name = "adress")
     private String adress;
     @Column(name = "contactPerson")
@@ -63,11 +63,11 @@ public class Client {
         this.mail = mail;
     }
 
-    public int getCif() {
+    public Integer getCif() {
         return cif;
     }
 
-    public void setCif(int cif) {
+    public void setCif(Integer cif) {
         this.cif = cif;
     }
 

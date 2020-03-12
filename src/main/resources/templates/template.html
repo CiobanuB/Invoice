@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html class="fixed" lang="en" xmlns:th="http://www.thymeleaf.org"   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html class="fixed" lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:fragment="head" th:remove="tag">
     <meta charset="UTF-8">
     <title>Invoice Website</title>
@@ -58,7 +59,7 @@
                          data-lock-picture="assets/images/!logged-user.jpg"/>
                 </figure>
                 <div class="profile-info" data-lock-name="John Doe" data-lock-email="johndoe@JSOFT.com">
-                    <div sec:authorize="isAuthenticated()" >
+                    <div sec:authorize="isAuthenticated()">
                         <span class="name" sec:authentication="name"></span>
                         <span class="role" sec:authorize="hasRole('ROLE_ADMIN')">Administrator</span>
                         <span class="role" sec:authorize="hasRole('ROLE_USER')">User</span>
@@ -76,8 +77,7 @@
                         <a role="menuitem" tabindex="-1" href="my-profile"><i class="fa fa-user"></i> My Profile</a>
                     </li>
                     <li>
-                        <a role="menuitem" tabindex="-1" href="#" data-lock-screen="true"><i class="fa fa-lock"></i>
-                            Lock Screen</a>
+                        <a role="menuitem" tabindex="-1" href="company-profile"><i class="fa fa-user"></i> My Company Profile</a>
                     </li>
                     <li>
                         <a role="menuitem" tabindex="-1" href="login"><i class="fa fa-power-off"></i> Logout</a>
@@ -88,7 +88,7 @@
     </div>
     <!-- end: search & user box -->
 </header>
-<div class="inner-wrapper" >
+<div class="inner-wrapper">
     <!-- start: sidebar -->
     <aside id="sidebar-left" class="sidebar-left" th:fragment="sidebar">
 
@@ -131,7 +131,7 @@
                             </ul>
                         </li>
                         <li>
-                            <a href="Invoice.html">
+                            <a href="Invoice">
                                 <span class="pull-right label label-primary">182</span>
                                 <i class="fa fa-envelope" aria-hidden="true"></i>
                                 <span>Invoices</span>
@@ -166,7 +166,7 @@
         </div>
     </aside>
 </div>
-<header class="page-header" >
+<header class="page-header">
     <h2>Dashboard Client</h2>
 
     <div class="right-wrapper pull-right">

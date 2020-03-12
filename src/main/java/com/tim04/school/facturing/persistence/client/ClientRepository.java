@@ -10,7 +10,8 @@ import java.util.List;
 public interface ClientRepository extends JpaRepository<Client,Long> {
     Client findByName(String name);
     Client findByCif(int cui);
-    List<Client> findAll();
+    List<Client> findByUserID(Long userId);
+
 
 
 }

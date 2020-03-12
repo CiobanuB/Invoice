@@ -40,7 +40,7 @@ public class UserProfileController {
         ModelAndView modelAndView = new ModelAndView();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String currentUSer = auth.getName(); //get logged in username
-        User theUser = userService.findUserByEmail(currentUSer);
+        User theUser = userService.findLogged();
 
         if (bindingResult.hasErrors()) {
             modelAndView.setViewName("Profile/my-profile");
