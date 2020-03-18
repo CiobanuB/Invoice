@@ -5,6 +5,7 @@ function validation(){
     var companyCif = document.getElementById('companyCif').value;
     var regDate = document.getElementById('regDate').value;
     var adress = document.getElementById('adress').value;
+    var mail = document.getElementById('mail').value;
     var website = document.getElementById('website').value;
     var bankAccount = document.getElementById('bankAccount').value;
 
@@ -18,6 +19,9 @@ function validation(){
      } else if(regDate =='') {
      document.getElementById("validation-date").innerHTML = "Please insert your regDate";
      return false;
+     } else if(mail =='') {
+          document.getElementById("validation-mail").innerHTML = "Please insert your mail";
+          return false;
      } else if(adress =='') {
       document.getElementById("validation-adress").innerHTML = "Please insert your adress";
       return false;

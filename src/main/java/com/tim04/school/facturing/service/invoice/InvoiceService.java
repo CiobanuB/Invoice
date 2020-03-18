@@ -4,8 +4,10 @@ import com.tim04.school.facturing.persistence.client.Client;
 import com.tim04.school.facturing.persistence.client.ClientRepository;
 import com.tim04.school.facturing.persistence.invoice.Invoice;
 import com.tim04.school.facturing.persistence.invoice.InvoiceRepository;
+import com.tim04.school.facturing.persistence.supplier.Supplier;
 import com.tim04.school.facturing.persistence.user.User;
 import com.tim04.school.facturing.service.client.ClientService;
+import com.tim04.school.facturing.service.supplier.SupplierService;
 import com.tim04.school.facturing.user.UserService;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -22,6 +24,9 @@ import org.springframework.web.servlet.ModelAndView;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.TextStyle;
 import java.util.*;
 
 import static org.apache.logging.log4j.util.LambdaUtil.getAll;
@@ -34,6 +39,9 @@ public class InvoiceService {
     private UserService userService;
     @Autowired
     private ClientService clientService;
+    @Autowired
+    private SupplierService supplierService;
+
 
     @Autowired
     public InvoiceService(InvoiceRepository invoiceRepository) {
@@ -69,19 +77,18 @@ public class InvoiceService {
         return theList;
     }
 
-    public void generateClientFolder(String path)
-    {
+    public void generateClientFolder(String path) {
         File file = new File(path);
         User user = userService.findLogged();
-        List<Client> clientList =  clientService.findByUserID();
-        for ( Client client: clientList) {
+        List<Client> clientList = clientService.findByUserID();
+        for (Client client : clientList) {
             boolean flag = false;
             for (File theFile : file.listFiles()) {
-                if(theFile.isDirectory() && theFile.getName().equals(client.getName())) {
-                    flag= true;
+                if (theFile.isDirectory() && theFile.getName().equals(client.getName())) {
+                    flag = true;
                 }
             }
-            if(!flag){
+            if (!flag) {
                 File newFile = new File(path + "\\" + client.getName());
                 newFile.mkdir();
             }
@@ -94,9 +101,8 @@ public class InvoiceService {
 
             List<Invoice> employees = invoiceRepository.findAll();
             List<Client> clients = clientService.findByUserID();
+            Supplier theSupplier = supplierService.findSupplierbyUserMail();
             String thePath = path;
-
-
             // Compile the Jasper report from .jrxml to .japser
             InputStream stream = this.getClass().getResourceAsStream("/MainInvoice.jrxml");
             JasperReport jasperReport = JasperCompileManager.compileReport(stream);
@@ -104,41 +110,54 @@ public class InvoiceService {
             Map<String, Object> parameters = new HashMap<>();
             List<Map<String, Object>> objects = new ArrayList<>();
             parameters.put("createdBy", "Websparrow.org");
-            for (Invoice invoice : employees) {
+           /* for (Invoice invoice : employees) {
                 Map<String, Object> item = new HashMap<String, Object>();
                 item.put("InvoiceID", invoice.getInvoiceID());
                 item.put("services", invoice.getServices());
-               item.put("price", invoice.getTotalPrice());
+               *//*item.put("price", invoice.getTotalPrice());
               item.put("quantity", invoice.getPieces());
-              item.put("quantity", invoice.getUnityMeasure());
+              item.put("quantity", invoice.getUnityMeasure());*//*
                 objects.add(item);
-            }
-            for (Client client : clients) {
+            }*/
+     /*       for (Client client : clients) {
                 Map<String, Object> item = new HashMap<String, Object>();
                 item.put("clientName", client.getName());
                 item.put("clientCif", client.getCif());
-                item.put("clientRegDate", client.getRegDate());
-                item.put("clientAdress", client.getAdress());
+             *//*   item.put("clientRegDate", client.getRegDate());
+                item.put("clientAdress", client.getAdress());*//*
                 objects.add(item);
-            }
+            }*/
+            Map<String, Object> supplierItems = new HashMap<String, Object>();
+            supplierItems.put("name", theSupplier.getName());
+            supplierItems.put("regDate", theSupplier.getRegDate());
+            supplierItems.put("mail", theSupplier.getMail());
+            supplierItems.put("cifSupplier", theSupplier.getCifSupplier());
+            supplierItems.put("adress", theSupplier.getAdress());
+            supplierItems.put("bankAccount", theSupplier.getBankAccount());
+            supplierItems.put("website", theSupplier.getWebsite());
+            objects.add(supplierItems);
             // Get your data source
             JRBeanCollectionDataSource jrBeanCollectionDataSource = new JRBeanCollectionDataSource(objects, false);
-
             // Fill the report
-            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters,
-                    jrBeanCollectionDataSource);
-
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, jrBeanCollectionDataSource);
             // Export the report to a PDF file
-            JasperExportManager.exportReportToPdfFile(jasperPrint, thePath + "\\testing.pdf");
-
+            JasperExportManager.exportReportToPdfFile(jasperPrint, thePath + "\\testing22.pdf");
             System.out.println("Done");
-
             return "Report successfully generated @path= " + thePath;
         } catch (Exception e) {
             e.printStackTrace();
             return "Error--> check the console log";
         }
     }
+
+    public String getCurrentMonth() {
+        String[] lunileAnului = {"Ianuarie", "Februarie", "Martie", "Aprilie", "Mai", "Iunie", "Iulie", "August", "Septembrie", "Octombrie", "Noiembrie", "Decembrie"};
+        LocalDate currentDate = LocalDate.now();
+        int month = currentDate.getMonthValue();
+        return lunileAnului[month - 1];
+    }
+
+/*    public Map<String, Object> objectsMap()*/
 
 
 }

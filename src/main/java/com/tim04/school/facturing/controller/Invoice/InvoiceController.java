@@ -57,12 +57,13 @@ public class InvoiceController {
         ModelAndView modelAndView = new ModelAndView();
         System.out.println(path);
         User user = userService.findLogged();
-            invoiceService.generateClientFolder(path);
-            user.setDefaultPath(path);
-            userService.updateUser(user);
-            invoiceService.generateReport(path);
-            modelAndView.addObject("user", user);
+    //    invoiceService.generateClientFolder(path);
+        user.setDefaultPath(path);
+        userService.updateUser(user);
+        invoiceService.generateReport(path);
+        modelAndView.addObject("user", user);
         modelAndView.setViewName("Invoice/Invoice");
         return modelAndView;
     }
+
 }

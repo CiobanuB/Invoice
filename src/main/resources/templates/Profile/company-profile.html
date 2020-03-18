@@ -57,6 +57,13 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-md-3 control-label" >Company CIF</label>
+                            <div class="col-md-6">
+                                <input th:field="*{mail}" type="text" class="form-control" placeholder="Company Cif"  id="mail" />
+                                <p class="error-message" id="validation-mail"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-md-3 control-label" >Company Reg. Date</label>
                             <div class="col-md-6">
                                 <input th:field="*{regDate}" type="text" class="form-control" placeholder="Reg. Date"  id="regDate"/>

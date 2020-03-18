@@ -52,6 +52,24 @@
 		</conditionalStyle>
 	</style>
 	<subDataset name="tableDataset" uuid="f13e6d36-5148-4ecc-bbe3-3035def80980"/>
+	<field name="InvoiceID" class="java.lang.Long"/>
+	<field name="services" class="java.lang.String"/>
+	<field name="unityMeasure" class="java.lang.Integer"/>
+	<field name="pieces" class="java.lang.Integer"/>
+	<field name="unitPrice" class="java.lang.Integer"/>
+	<field name="totalPrice" class="java.lang.Integer"/>
+	<field name="clientName" class="java.lang.String"/>
+	<field name="clientCif" class="java.lang.Integer"/>
+	<field name="clientRegDate" class="java.lang.String"/>
+	<field name="clientAdress" class="java.lang.String"/>
+	<field name="mail" class="java.lang.String"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="website" class="java.lang.String"/>
+	<field name="bankAccount" class="java.lang.String"/>
+	<field name="firstName" class="java.lang.String"/>
+	<field name="cifSupplier" class="java.lang.Integer"/>
+	<field name="regDate" class="java.lang.String"/>
+	<field name="adress" class="java.lang.String"/>
 	<title>
 		<band height="200" splitType="Stretch">
 			<rectangle>
@@ -67,7 +85,7 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{cuiFiscal}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cifSupplier}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="10" y="68" width="29" height="15" uuid="81d5597f-8307-40a5-8945-96412cc7221b"/>
@@ -96,7 +114,7 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{cuiFiscal}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{regDate}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement style="Detail" positionType="Float" x="50" y="98" width="130" height="15" uuid="70fd4182-581c-4010-bfe2-985fc67b1329">
@@ -105,7 +123,7 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{cuiFiscal}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{adress}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement style="Detail" positionType="Float" x="40" y="113" width="140" height="15" uuid="70e33da2-49f5-44da-b288-dbc816218f9a">
@@ -114,7 +132,7 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{cuiFiscal}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{mail}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement style="Detail" positionType="Float" x="59" y="53" width="121" height="15" uuid="0d877024-f554-4a2f-851e-9605db255968">
@@ -123,7 +141,7 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{cuiFiscal}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="10" y="53" width="49" height="15" uuid="97759bb3-4e39-46d4-b261-10514e2219a6"/>
@@ -142,7 +160,7 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{cuiFiscal}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{website}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="10" y="143" width="63" height="15" uuid="0444a04a-1462-4a35-87dc-5e2be7b64988"/>
@@ -156,7 +174,7 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{cuiFiscal}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{bankAccount}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement style="Detail" positionType="Float" x="360" y="68" width="185" height="15" uuid="eead18a3-0382-486d-8ec9-5b8ea54a3dc1">
@@ -475,7 +493,7 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{cuiFiscal}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{firstName}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="417" y="154" width="35" height="15" uuid="7b5b4020-4b78-407c-a038-39550085f523"/>
@@ -490,7 +508,6 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{cuiFiscal}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="526" y="154" width="34" height="15" uuid="2f74b93d-03ad-4fdb-887e-9f9db206817c"/>

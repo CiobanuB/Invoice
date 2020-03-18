@@ -36,13 +36,10 @@ public class ClientService {
     }
 
 
-    @Transactional(readOnly = true)
     public List<Client> findByUserID(){
         User user  = userService.findLogged();
-
         return clientRepository.findByUserID(user.getUserID());
     }
-    @Transactional(readOnly = true)
     public Client getClient(){
         return clientRepository.findByName("bog");
     }
