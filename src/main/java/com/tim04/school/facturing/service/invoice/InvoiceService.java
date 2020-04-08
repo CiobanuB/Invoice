@@ -1,7 +1,6 @@
 package com.tim04.school.facturing.service.invoice;
 
 import com.tim04.school.facturing.persistence.client.Client;
-import com.tim04.school.facturing.persistence.client.ClientRepository;
 import com.tim04.school.facturing.persistence.invoice.Invoice;
 import com.tim04.school.facturing.persistence.invoice.InvoiceRepository;
 import com.tim04.school.facturing.persistence.supplier.Supplier;
@@ -12,24 +11,13 @@ import com.tim04.school.facturing.user.UserService;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ResourceUtils;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.time.LocalDate;
-import java.time.Month;
-import java.time.format.TextStyle;
 import java.util.*;
-
-import static org.apache.logging.log4j.util.LambdaUtil.getAll;
 
 @Service
 public class InvoiceService {
@@ -53,11 +41,11 @@ public class InvoiceService {
     }
 
     @Transactional
-    private void save(Integer invoiceSeries, String printDate, int cuiFiscal, int unityMeasure, int sum, String services, int pieces, int vat) {
+    private void save(Integer invoiceSeries, Date printDate, String clientName, int unityMeasure, int sum, String services, int pieces, int vat) {
         Invoice theInvoice = new Invoice();
         theInvoice.setInvoiceSeries(invoiceSeries);
         theInvoice.setPrintDate(printDate);
-        theInvoice.setCuiFiscal(cuiFiscal);
+        theInvoice.setClientName(clientName);
         theInvoice.setUnityMeasure(unityMeasure);
         theInvoice.setSum(sum);
         theInvoice.setServices(services);
@@ -66,8 +54,8 @@ public class InvoiceService {
     }
 
     @Transactional(readOnly = true)
-    public Invoice findInvoice(int cif) {
-        Invoice theInvoice = invoiceRepository.findInvoiceByCuiFiscal(cif);
+    public Invoice findInvoice(String clientName) {
+        Invoice theInvoice = invoiceRepository.findInvoiceByClientName(clientName);
         return theInvoice;
     }
 
@@ -96,46 +84,32 @@ public class InvoiceService {
     }
 
 
-    public String generateReport(String path) {
+    public String generateReport(String path, Invoice invoice,String clientName) {
         try {
 
-            List<Invoice> employees = invoiceRepository.findAll();
-            List<Client> clients = clientService.findByUserID();
-            Supplier theSupplier = supplierService.findSupplierbyUserMail();
+            Supplier theSupplier = supplierService.getSupplier();
+            Map<String, Object> supplierMap = supplierService.supplierMap(theSupplier);
+            Map<String, Object> clientMap = clientService.clientMap(clientName);
+
+            Map<String, Object> invoiceItem = new HashMap<String, Object>();
+            invoiceItem.put("InvoiceID", invoice.getInvoiceID());
+            invoiceItem.put("services", invoice.getServices());
+            invoiceItem.put("price", invoice.getTotalPrice());
+            invoiceItem.put("quantity", invoice.getPieces());
+            invoiceItem.put("unityMeasure", invoice.getUnityMeasure());
+            // Add parameters
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("createdBy", "Websparrow.org");
+            List<Map<String, Object>> objects = new ArrayList<>();
+            objects.add(supplierMap);
+            objects.add(supplierMap);
+            objects.add(clientMap);
+
             String thePath = path;
             // Compile the Jasper report from .jrxml to .japser
             InputStream stream = this.getClass().getResourceAsStream("/MainInvoice.jrxml");
             JasperReport jasperReport = JasperCompileManager.compileReport(stream);
-            // Add parameters
-            Map<String, Object> parameters = new HashMap<>();
-            List<Map<String, Object>> objects = new ArrayList<>();
-            parameters.put("createdBy", "Websparrow.org");
-           /* for (Invoice invoice : employees) {
-                Map<String, Object> item = new HashMap<String, Object>();
-                item.put("InvoiceID", invoice.getInvoiceID());
-                item.put("services", invoice.getServices());
-               *//*item.put("price", invoice.getTotalPrice());
-              item.put("quantity", invoice.getPieces());
-              item.put("quantity", invoice.getUnityMeasure());*//*
-                objects.add(item);
-            }*/
-     /*       for (Client client : clients) {
-                Map<String, Object> item = new HashMap<String, Object>();
-                item.put("clientName", client.getName());
-                item.put("clientCif", client.getCif());
-             *//*   item.put("clientRegDate", client.getRegDate());
-                item.put("clientAdress", client.getAdress());*//*
-                objects.add(item);
-            }*/
-            Map<String, Object> supplierItems = new HashMap<String, Object>();
-            supplierItems.put("name", theSupplier.getName());
-            supplierItems.put("regDate", theSupplier.getRegDate());
-            supplierItems.put("mail", theSupplier.getMail());
-            supplierItems.put("cifSupplier", theSupplier.getCifSupplier());
-            supplierItems.put("adress", theSupplier.getAdress());
-            supplierItems.put("bankAccount", theSupplier.getBankAccount());
-            supplierItems.put("website", theSupplier.getWebsite());
-            objects.add(supplierItems);
+
             // Get your data source
             JRBeanCollectionDataSource jrBeanCollectionDataSource = new JRBeanCollectionDataSource(objects, false);
             // Fill the report
@@ -157,7 +131,35 @@ public class InvoiceService {
         return lunileAnului[month - 1];
     }
 
-/*    public Map<String, Object> objectsMap()*/
+
+    public Map<String, Object> invoiceMap( Invoice invoice) {
+        Map<String, Object> invoiceItems = new HashMap<String, Object>();
+            Map<String, Object> item = new HashMap<String, Object>();
+            item.put("InvoiceID", invoice.getInvoiceID());
+            item.put("services", invoice.getServices());
+            item.put("price", invoice.getTotalPrice());
+            item.put("quantity", invoice.getPieces());
+            item.put("unityMeasure", invoice.getUnityMeasure());
+        return invoiceItems;
+    }
+    @Transactional(readOnly = true)
+    public List<Invoice> getListInvoice(){
+        List<Invoice> getList = invoiceRepository.findAll();
+        return getList;
+    }
+
+/*    public Map<String, Supplier> invoiceMap(List<Supplier> invoiceList) {
+        Map<String, Supplier> invoiceItems = new HashMap<String, Supplier>();
+        for (Invoice invoice : invoiceList) {
+            Map<String, Object> item = new HashMap<String, Object>();
+            item.put("InvoiceID", invoice.getInvoiceID());
+            item.put("services", invoice.getServices());
+            item.put("price", invoice.getTotalPrice());
+            item.put("quantity", invoice.getPieces());
+            item.put("unityMeasure", invoice.getUnityMeasure());
+        }
+        return invoiceItems;
+    }*/
 
 
 }

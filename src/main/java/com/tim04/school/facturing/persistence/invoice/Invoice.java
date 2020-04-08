@@ -1,6 +1,9 @@
 package com.tim04.school.facturing.persistence.invoice;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "Invoice")
@@ -12,9 +15,10 @@ public class Invoice {
     @Column(name = "invoiceSeries")
     private Integer invoiceSeries;
     @Column(name = "printDate")
-    private String printDate;
-    @Column(name = "cuiFiscal")
-    private Integer cuiFiscal;
+    @Type(type="date")
+    private Date printDate;
+    @Column(name = "clientName")
+    private String clientName;
     @Column(name = "unityMeasure")
     private Integer unityMeasure;
     @Column(name = "sum")
@@ -27,6 +31,7 @@ public class Invoice {
     private Integer unitPrice;
     @Column(name = "totalPrice")
     private Integer totalPrice;
+
     public Long getInvoiceID() {
         return InvoiceID;
     }
@@ -43,20 +48,20 @@ public class Invoice {
         this.invoiceSeries = invoiceSeries;
     }
 
-    public String getPrintDate() {
-        return printDate;
+    public Date getPrintDate() {
+        return (Date) this.printDate.clone();
     }
 
-    public void setPrintDate(String printDate) {
-        this.printDate = printDate;
+    public void setPrintDate(Date date) {
+        this.printDate = (Date) date.clone();
     }
 
-    public Integer getCuiFiscal() {
-        return cuiFiscal;
+    public String getClientName() {
+        return clientName;
     }
 
-    public void setCuiFiscal(Integer cuiFiscal) {
-        this.cuiFiscal = cuiFiscal;
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
     }
 
     public Integer getUnityMeasure() {
@@ -113,7 +118,7 @@ public class Invoice {
                 "InvoiceID=" + InvoiceID +
                 ", invoiceSeries=" + invoiceSeries +
                 ", printDate='" + printDate + '\'' +
-                ", cuiFiscal=" + cuiFiscal +
+                ", clientName='" + clientName + '\'' +
                 ", unityMeasure=" + unityMeasure +
                 ", sum=" + sum +
                 ", services='" + services + '\'' +

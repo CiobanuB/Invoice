@@ -27,7 +27,7 @@ public class SupplierController {
     @RequestMapping(value = {"/", ""}, method = RequestMethod.GET)
     public ModelAndView company() throws FileNotFoundException, JRException {
         ModelAndView modelAndView = new ModelAndView();
-        Supplier supplier = supplierService.findSupplierbyUserMail();
+        Supplier supplier = supplierService.getSupplier();
         modelAndView.addObject("supplier", supplier);
         modelAndView.setViewName("Profile/company-profile");
         return modelAndView;

@@ -65,16 +65,11 @@
                 <h2 class="panel-title">Default</h2>
             </header>
             <div class="panel-body" id ="main-panel">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="mb-md">
-                            <button id="addToTable" class="btn btn-primary">Add <i class="fa fa-plus"></i></button>
-                        </div>
-                    </div>
-                </div>
+
                 <table class="table table-bordered table-striped mb-none" id="datatable-editable">
                     <thead>
                     <tr>
+                        <th>Number</th>
                         <th>Name</th>
                         <th>Reg-Date</th>
                         <th>Mail</th>
@@ -85,38 +80,29 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="gradeX" method="GET" th:each="client, iteratSts : ${clients}" th:id = "'trID' + ${client.getClientID()}">
-                        <form th:action="@{/add-edit-clients}" th:object="${theClient}" method="post"  >
-                            <td th:text="${client.getName()}" th:id="name + ${iteratSts.index}">
-                                <input type="hidden" th:field="*{name}" th:id="inputName +${iteratSts.index}" />
-                            </td>
 
-                            <td th:text="${client.getRegDate()}" th:id="date + ${iteratSts.index}" >
-                                <input type="hidden" th:field="*{regDate}" th:id="inputDate +${iteratSts.index} " />
-                            </td>
-                            <td th:text="${client.getMail()}" th:id="mail +${iteratSts.index}">
-                                <input type="hidden" th:field="*{mail}" th:id="inputMail + ${iteratSts.index}" />
-                            </td>
-                            <td th:text="${client.getCif()}" th:id="cif +${iteratSts.index}">
-                                <input type="hidden" th:field="*{cif}"  th:id="inputCif +${iteratSts.index}"/>
-                            </td>
-                            <td th:text="${client.getAdress()}" th:id="adress +${iteratSts.index}">
-                                <input type="hidden" th:field="*{adress}" th:id="inputAdress + ${iteratSts.index}" />
-                            </td>
-                            <td th:text="${client.getContactPerson()}" th:id="contact + ${iteratSts.index}">
-                                <input type="text" th:field="*{contactPerson}" th:id="inputContact +${iteratSts.index}" />
-                            </td>
+                    <tr class="gradeX" method="GET" th:each="client, iteratSts : ${clients}" >
+                        <!--<form th:action="@{/add-edit-clients}" th:object="${client}" method="post"  >-->
+                           <!-- <input type="text" th:field="*{clients[__${iteratSts.index}__].name}" th:id="${'clientNumber-'+ clients[__${iteratSts.index}__]}"/>-->
+                            <td th:text="${iteratSts.index}+1" class="number"></td>
+                            <td th:text="${client.getName()}" th:id="name + (${iteratSts.index}+1)"></td>
+                            <td th:text="${client.getRegDate()}" th:id="date + (${iteratSts.index}+1)" ></td>
+                            <td th:text="${client.getMail()}" th:id="mail +(${iteratSts.index}+1)"></td>
+                            <td th:text="${client.getCif()}" th:id="cif +(${iteratSts.index}+1)"></td>
+                            <td th:text="${client.getAdress()}" th:id="adress +(${iteratSts.index}+1)"></td>
+                            <td th:text="${client.getContactPerson()}" th:id="contact + (${iteratSts.index}+1)"></td>
 
                         <td class="actions">
-                            <a href="#" class="hidden on-editing save-row"><i class="fa fa-save"></i></a>
+                            <a href="#" onClick="validationForm(this.id)" class="hidden on-editing save-row"><i class="fa fa-save"></i></a>
                             <a href="#" class="hidden on-editing cancel-row"><i class="fa fa-times"></i></a>
                             <a href="#" class="on-default edit-row"><i class="fa fa-pencil"></i></a>
                             <a href="#" class="on-default remove-row"><i class="fa fa-trash-o"></i></a>
-                            <button onclick="return validationForm();">great!</button>
-                            <button  type="submit" value="submit">Update</button>
+                            <a href="" onClick="validationForm(this.id)">ss</a>
+                            <button type="button"  onClick="validationForm(this.id)" th:id="${iteratSts.index}+1" >Submit</button>
+                            <button  type="submit" >Submit</button>
                         </td>
-                        </form>
                     </tr>
+                    <!--</form>-->
 
                     </tbody>
                 </table>

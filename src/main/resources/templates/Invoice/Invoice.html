@@ -66,50 +66,48 @@
             </header>
             <div class="panel-body">
                 <div class="row">
-                <form th:action = "@{/Invoice}" th:object="${user}" method="post" onsubmit="return validation();">
-                    <p class="panel-title margins">Please insert your default path ( Full path required ) :</p> <input type="text" class="text-center col-md-4 margins " id="getPath" th:field="*{defaultPath}">
-                    <button type="submit" class="margins btn btn-primary">Save</button>
-                </form>
+                    <form th:action = "@{/Invoice}" th:object="${user}" method="post" onsubmit="return validation();">
+                        <p class="panel-title margins">Please insert your default path ( Full path required ) :</p> <input type="text" class="text-center col-md-4 margins " id="getPath" th:field="*{defaultPath}">
+                        <button type="submit" class="margins btn btn-primary">Save</button>
+                    </form>
                 </div>
             </div>
-
         </section>
-        <section class="panel">
-            <header class="panel-heading">
-                <div class="panel-actions">
-                    <a href="#" class="fa fa-caret-down"></a>
-                    <a href="#" class="fa fa-times"></a>
-                </div>
 
-                <h4 class="panel-title">Generate custom invoice</h4>
-            </header>
-            <div class="panel-body">
-                <div class="row"> <p>testing</p></div>
-                <form action = "#" th:action = "@{/invoiceDetails}" th:object="${generateInvoice}" method="GET">
-                    <input type="text" name="">
-                </form>
+            <div class="panel-body" id ="main-panel">
+                <table class="table table-bordered table-striped mb-none" id="datatable-editable">
+                    <thead>
+                    <tr>
+                        <th>Number</th>
+                        <th>Client Name</th>
+                        <th>Last Invoice</th>
+                        <th>Series</th>
+                        <th>Service Name</th>
+                        <th>Sum</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <tr class="gradeX" method="GET" th:each="invoice, iteratSts : ${invoiceList}" >
+
+                            <td th:text="${iteratSts.index}+1" class="number"></td>
+                            <td th:text="${invoice.getClientName()}" th:id="name + (${iteratSts.index}+1)"></td>
+                            <td th:text="${invoice.getPrintDate()}" th:id="date + (${iteratSts.index}+1)" ></td>
+                            <td th:text="${invoice.getInvoiceSeries()}" th:id="mail +(${iteratSts.index}+1)"></td>
+                            <td th:text="${invoice.getServices()}" th:id="cif +(${iteratSts.index}+1)"></td>
+                            <td th:text="${invoice.getSum()}" th:id="adress +(${iteratSts.index}+1)"></td>
+
+                            <td class="actions">
+                                <a href="#" class="on-default remove-row"><i class="fa fa-trash-o"></i></a>
+                                <a href="" onClick="validationForm(this.id)">ss</a>
+                                <button type="button"  onClick="validationForm(this.id)" th:id="${iteratSts.index}+1" >Submit</button>
+                                <button  type="submit" >Submit</button>
+                            </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
-
-        </section>
-        <section class="panel">
-            <header class="panel-heading">
-                <div class="panel-actions">
-                    <a href="#" class="fa fa-caret-down"></a>
-                    <a href="#" class="fa fa-times"></a>
-                </div>
-
-                <h4 class="panel-title">Generate standard invoice</h4>
-            </header>
-            <div class="panel-body">
-                <div class="row"> <p>testing</p></div>
-               <!-- <form action = "#" th:action = "@{/defaultInvoice}" th:object="${generateInvoice}" method="GET">
-                    <input type="text" name="cif" th:field="*{cif}">
-                    <button class="btn btn-primary" name="submit" type="submit" value="0">Submit</button>
-                </form>-->
-
-            </div>
-
-        </section>
         <!-- end: page -->
     </section>
 </div>
@@ -139,7 +137,6 @@
 
 
 <!-- Examples -->
-<script src="assets/javascripts/tables/examples.datatables.editable.js"></script>
-<script src="assets/javascripts/customs/InvoiceCustom.js"></script>
+<script src="assets/javascripts/tables/examples.datatables.editableInvoice.js"></script>
 </body>
 </html>

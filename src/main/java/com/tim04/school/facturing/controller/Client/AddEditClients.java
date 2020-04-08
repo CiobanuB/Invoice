@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -17,6 +18,7 @@ import java.util.List;
 public class AddEditClients {
     @Autowired
     private ClientService clientService;
+
 
     /* @RequestMapping(value = "/{userID}" ,method = RequestMethod.GET)
      public ModelAndView getClients(@PathVariable(value = "userID", required = false) Long userid) {
@@ -46,7 +48,8 @@ public class AddEditClients {
     public ModelAndView getClients() {
         ModelAndView modelAndView = new ModelAndView();
 
-        List<Client> clients = clientService.findByUserID();
+        List<Client> clients = new ArrayList<>();
+        clients = clientService.findByUserID();
         for (Client client : clients) {
             System.out.println(client.toString());
         }
@@ -56,19 +59,26 @@ public class AddEditClients {
     }
 
     @PostMapping()
-    public ModelAndView saveClient(@ModelAttribute(value = "theClient") Client client, BindingResult bindingResult) {
+    public ModelAndView saveClient(@ModelAttribute("client") Client client, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
         System.out.println(client.getName());
+        Client findClient = clientService.getClientByMail(client.getMail());
 
         if (bindingResult.hasErrors()) {
-            modelAndView.setViewName("Profile/my-profile");
+            modelAndView.setViewName("Clients/AddEditClients");
         } else {
             if (client != null) {
-                System.out.println(client);
 
+                findClient.setName(client.getName());
+                findClient.setRegDate(client.getRegDate());
+                findClient.setMail(client.getMail());
+                findClient.setName(client.getName());
+                findClient.setAdress(client.getAdress());
+                findClient.setContactPerson(client.getContactPerson());
+                clientService.save(findClient);
+                //return new ModelAndView("redirect:add-edit-clients");
+                modelAndView.setViewName("Clients/AddEditClients");
             }
-            return new ModelAndView("redirect:/Clients/AddEditClients")
-            modelAndView.setViewName("Clients/AddEditClients");
         }
         clientService.save(client);
         modelAndView.addObject(client);

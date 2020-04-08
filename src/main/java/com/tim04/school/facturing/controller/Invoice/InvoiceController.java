@@ -40,9 +40,13 @@ public class InvoiceController {
         ModelAndView modelAndView = new ModelAndView();
         User user = userService.findLogged();
         modelAndView.addObject("user", user);
+        List<Invoice> invoiceList = invoiceService.getListInvoice();
+        modelAndView.addObject("invoiceList",invoiceList);
         modelAndView.setViewName("Invoice/Invoice.html");
         return modelAndView;
     }
+
+
 
 /*
     @GetMapping()
@@ -53,14 +57,14 @@ public class InvoiceController {
 
 
     @PostMapping()
-    public ModelAndView savePath(@RequestParam("defaultPath") String path) {
+    public ModelAndView savePath(@RequestParam(value = "defaultPath") String path, @ModelAttribute("invoice") Invoice invoice,@RequestParam(value = "clientName") String clientName) {
         ModelAndView modelAndView = new ModelAndView();
         System.out.println(path);
         User user = userService.findLogged();
     //    invoiceService.generateClientFolder(path);
         user.setDefaultPath(path);
         userService.updateUser(user);
-        invoiceService.generateReport(path);
+        invoiceService.generateReport(path,invoice,clientName);
         modelAndView.addObject("user", user);
         modelAndView.setViewName("Invoice/Invoice");
         return modelAndView;

@@ -1,6 +1,7 @@
 package com.tim04.school.facturing.persistence.client;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "Client")
@@ -22,6 +23,7 @@ public class Client {
     private String adress;
     @Column(name = "contactPerson")
     private String contactPerson;
+
 
    public Long getClientID() {
         return clientID;

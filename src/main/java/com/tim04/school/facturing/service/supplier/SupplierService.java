@@ -8,7 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class SupplierService {
@@ -31,7 +32,7 @@ public class SupplierService {
         supplierRepository.save(supplier);
     }
 
-    public Supplier findSupplierbyUserMail()
+    public Supplier getSupplier()
     {
         User user = userService.findLogged();
         Supplier supplier = supplierRepository.findSupplierByUserMail(user.getMail());
@@ -50,6 +51,19 @@ public class SupplierService {
         theSupplier.setWebsite(supplier.getWebsite());
         theSupplier.setUserMail(theUser.getMail());
         return theSupplier;
+    }
+
+    public Map<String, Object> supplierMap(Supplier supplier) {
+
+        Map<String, Object> supplierItems = new HashMap<String, Object>();
+        supplierItems.put("name", supplier.getName());
+        supplierItems.put("regDate", supplier.getRegDate());
+        supplierItems.put("mail", supplier.getMail());
+        supplierItems.put("cifSupplier", supplier.getCifSupplier());
+        supplierItems.put("adress", supplier.getAdress());
+        supplierItems.put("bankAccount", supplier.getBankAccount());
+        supplierItems.put("website", supplier.getWebsite());
+        return supplierItems;
     }
 
 }
