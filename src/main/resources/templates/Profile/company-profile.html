@@ -30,7 +30,63 @@
         </header>
 
     <!-- start: page -->
+        <section class="panel">
+            <header class="panel-warning">
+                <div class="panel-actions">
+                    <a href="#" class="fa fa-caret-down"></a>
+                    <a href="#" class="fa fa-times"></a>
+                </div>
 
+                <h4 class="panel-title">Set mail properties</h4>
+            </header>
+            <div class="panel-body">
+                <div class="row">
+                    <form th:action = "@{/company-profile/mailPropForm}" th:object="${mailProperties}" method="post" onsubmit="return mailValidation();">
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" >Hosting port</label>
+                            <div class="col-md-6">
+                                <input th:field="*{port}" type="text" class="form-control" placeholder="ex: 587" id = "hostinPort"/>
+                                <p class="error-message" id="validation-port"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" >Smtp name ( mail server name )</label>
+                            <div class="col-md-6">
+                                <input th:field="*{smtp}" type="text" class="form-control" placeholder="Ex : smtp.gmail.com" id = "smtpName"/>
+                                <p class="error-message" id="validation-smtp"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" >Hosting</label>
+                            <div class="col-md-6">
+                                <input th:field="*{host}" type="text" class="form-control" placeholder="Ex: smtp" id = "hosting"/>
+                                <p class="error-message" id="validation-hosting"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" >Mail adress</label>
+                            <div class="col-md-6">
+                                <input th:field="*{from}" type="text" class="form-control" placeholder="ex: jordan@gmail.com" id = "mailAdress"/>
+                                <span th:if="${#fields.hasErrors('from')}" th:errors="*{from}" class="error-message"></span>
+                                <p class="error-message" id="validation-mailAdress"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" >Mail password</label>
+                            <div class="col-md-6">
+                                <input th:field="*{password}" type="password" class="form-control" placeholder="Password of your mail" id = "mailPassword"/>
+                                <p class="error-message" id="validation-mailPwd"></p>
+                            </div>
+                        </div>
+                        <button type="submit" class="margins btn btn-primary">Save</button>
+                        <div class="row">
+                            <p class="text-center  text-uppercase text-success success-message" th:utext="${mailPropValidation}"></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
         <div class="col-lg-12">
             <section class="panel">
                 <header class="panel-heading">
@@ -41,7 +97,7 @@
                     </div>
                 </header>
                 <div class="panel-body">
-                    <form class="form-horizontal form-bordered" th:action="@{/company-profile}" th:object="${supplier}"  method="post" onsubmit="return validation();" >
+                    <form class="form-horizontal form-bordered" th:action="@{/company-profile/supplierForm}" th:object="${supplier}"  method="post" onsubmit="return validation();" >
                         <div class="form-group">
                             <label class="col-md-3 control-label" >Company name</label>
                             <div class="col-md-6">
@@ -53,11 +109,12 @@
                             <label class="col-md-3 control-label" >Company CIF</label>
                             <div class="col-md-6">
                                 <input th:field="*{cifSupplier}" type="text" class="form-control" placeholder="Company Cif"  id="companyCif" />
+                                <span th:if="${#fields.hasErrors('cifSupplier')}" th:errors="*{cifSupplier}" class="error-message"></span>
                                 <p class="error-message" id="validation-cif"></p>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-3 control-label" >Company CIF</label>
+                            <label class="col-md-3 control-label" >Company Mail</label>
                             <div class="col-md-6">
                                 <input th:field="*{mail}" type="text" class="form-control" placeholder="Company Cif"  id="mail" />
                                 <p class="error-message" id="validation-mail"></p>
@@ -66,10 +123,12 @@
                         <div class="form-group">
                             <label class="col-md-3 control-label" >Company Reg. Date</label>
                             <div class="col-md-6">
-                                <input th:field="*{regDate}" type="text" class="form-control" placeholder="Reg. Date"  id="regDate"/>
+                                <input th:field="*{regDate}" type="text" class="form-control" placeholder="Reg. Date" data-date-format="dd/mm/yyyy"  id="regDate"/>
+                                <span class="glyphicon glyphicon-calendar customCalendar"></span>
                                 <p class="error-message" id="validation-date"></p>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <label class="col-md-3 control-label" >Adress</label>
                             <div class="col-md-6">
@@ -91,7 +150,7 @@
                                 <p class="error-message" id="validation-bank"></p>
                             </div>
                         </div>
-
+                        <p class="text-center  text-uppercase text-success success-message" th:utext="${successMessage}"></p>
                         <div class="form-group">
                             <label class="col-md-3 control-label" ></label>
                             <div class="col-md-6 col-md-offset-2">
@@ -99,7 +158,7 @@
                                 <button type="reset" class="btn btn-default">Reset</button>
                             </div>
                         </div>
-                        <p class="text-center  text-uppercase text-success success-message" th:utext="${successMessage}"></p>
+
                     </form>
                 </div>
             </section>

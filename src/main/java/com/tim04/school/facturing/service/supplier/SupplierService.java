@@ -1,22 +1,30 @@
 package com.tim04.school.facturing.service.supplier;
 
+import com.tim04.school.facturing.persistence.client.Client;
+import com.tim04.school.facturing.persistence.invoice.Invoice;
 import com.tim04.school.facturing.persistence.supplier.Supplier;
 import com.tim04.school.facturing.persistence.supplier.SupplierRepository;
 import com.tim04.school.facturing.persistence.user.User;
+import com.tim04.school.facturing.service.invoice.InvoiceService;
 import com.tim04.school.facturing.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class SupplierService {
+
     private final SupplierRepository supplierRepository;
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private InvoiceService invoiceService;
 
     @Autowired
     public SupplierService(SupplierRepository supplierRepository) {
@@ -29,40 +37,64 @@ public class SupplierService {
 
     @Transactional
     public void save(Supplier supplier) {
+        User loggedUser = userService.findLogged();
+        supplier.setUser(loggedUser);
         supplierRepository.save(supplier);
     }
+    @Transactional
+    public void updateSupplier(Supplier supplier) {
+        User loggedUser = userService.findLogged();
+        Supplier findSupplier = supplierRepository.findSupplierByUser(loggedUser);
+        findSupplier.setBankAccount(supplier.getBankAccount());
+        findSupplier.setCifSupplier(supplier.getCifSupplier());
+        findSupplier.setMail(supplier.getMail());
+        findSupplier.setName(supplier.getName());
+        findSupplier.setRegDate(supplier.getRegDate());
+        findSupplier.setAdress(supplier.getAdress());
+        findSupplier.setWebsite(supplier.getWebsite());
+        findSupplier.setUser(loggedUser);
+        supplierRepository.save(findSupplier);
+    }
 
-    public Supplier getSupplier()
+
+
+  /*  public Optional<Supplier> getTheSupplier()
     {
         User user = userService.findLogged();
-        Supplier supplier = supplierRepository.findSupplierByUserMail(user.getMail());
+        Optional<Supplier> optional = supplierRepository.findSupplierByUser(user);
+        if(optional.isPresent()) return optional;
+        else return optional.empty();
+
+    }*/
+
+    public Supplier getTheSupplier()
+    {
+        User user = userService.findLogged();
+        Supplier supplier = supplierRepository.findSupplierByUser(user);
+        if(supplier ==null) return null;
         return supplier;
     }
     public Supplier setFields(Supplier supplier)
     {
         User theUser = userService.findLogged();
-        Supplier theSupplier = supplierRepository.findSupplierByUserMail(theUser.getMail());
-        theSupplier.setName(supplier.getName());
-        theSupplier.setRegDate(supplier.getRegDate());
-        theSupplier.setMail(supplier.getMail());
-        theSupplier.setCifSupplier(supplier.getCifSupplier());
-        theSupplier.setAdress(supplier.getAdress());
-        theSupplier.setBankAccount(supplier.getBankAccount());
-        theSupplier.setWebsite(supplier.getWebsite());
-        theSupplier.setUserMail(theUser.getMail());
-        return theSupplier;
+        supplier.setUser(theUser);
+        return supplier;
     }
 
-    public Map<String, Object> supplierMap(Supplier supplier) {
-
-        Map<String, Object> supplierItems = new HashMap<String, Object>();
-        supplierItems.put("name", supplier.getName());
-        supplierItems.put("regDate", supplier.getRegDate());
-        supplierItems.put("mail", supplier.getMail());
-        supplierItems.put("cifSupplier", supplier.getCifSupplier());
-        supplierItems.put("adress", supplier.getAdress());
-        supplierItems.put("bankAccount", supplier.getBankAccount());
-        supplierItems.put("website", supplier.getWebsite());
+    public Map<String, Object> supplierMap(Invoice invoice) {
+        Map<String,Object> supplierItems = new HashMap<>();
+        Optional<Invoice> optionalInvoice = invoiceService.getInvoiceSeries(invoice.getInvoiceSeries());
+        Invoice findInvoice = optionalInvoice.get();
+        Supplier supplier = findInvoice.getSupplier();
+        if(optionalInvoice.isPresent()) {
+            supplierItems.put("name", supplier.getName());
+            supplierItems.put("regDate", supplier.getRegDate());
+            supplierItems.put("mail", supplier.getMail());
+            supplierItems.put("cifSupplier", supplier.getCifSupplier());
+            supplierItems.put("adress", supplier.getAdress());
+            supplierItems.put("bankAccount", supplier.getBankAccount());
+            supplierItems.put("website", supplier.getWebsite());
+        }
         return supplierItems;
     }
 

@@ -15,18 +15,15 @@ import java.util.List;
 public class TestController {
     @Autowired
     private ClientService clientService;
-
+/*
     @GetMapping("getClient")
     public ModelAndView getClient() {
-        Client theClient = new Client();
-        theClient = clientService.getClient();
+        Client theClient = theClient = clientService.getClient();
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("getClient.html");
         modelAndView.addObject("client", theClient);
-
         return modelAndView;
-
-    }
+    }*/
 
     @GetMapping("/getAll")
     public ModelAndView getAll() {

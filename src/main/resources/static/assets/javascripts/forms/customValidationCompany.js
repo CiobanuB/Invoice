@@ -35,3 +35,34 @@ function validation(){
     return true;
     }
 }
+function mailValidation(){
+
+    var hostinPort = document.getElementById('hostinPort').value;
+    var smtpName = document.getElementById('smtpName').value;
+    var mailAdress = document.getElementById('mailAdress').value;
+    var hosting = document.getElementById('hosting').value;
+    var mailPassword = document.getElementById('mailPassword').value;
+
+     if(hostinPort == '')
+        {
+         document.getElementById("validation-port").innerHTML = "Please insert your companyName";
+         return false;
+        } else if(smtpName =='') {
+        document.getElementById("validation-smtp").innerHTML = "Please insert your companyCif";
+        return false;
+         } else if(hosting =='') {
+          document.getElementById("validation-hosting").innerHTML = "Please insert your companyCif";
+          return false;
+          }else if(mailAdress =='') {
+         document.getElementById("validation-mailAdress").innerHTML = "Please insert your regDate";
+         return false;
+         } else if(mailPassword =='') {
+         document.getElementById("validation-mailPwd").innerHTML = "Please insert your mail";
+         return false;
+         } else {
+         return true;
+         }
+}
+$('#regDate').datepicker({
+     dateFormat: 'dd-mm-yyyy',
+ });

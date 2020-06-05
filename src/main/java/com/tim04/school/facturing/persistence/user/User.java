@@ -1,50 +1,74 @@
 package com.tim04.school.facturing.persistence.user;
 
-import com.tim04.school.facturing.persistence.Role.Role;
-import org.hibernate.validator.constraints.Length;
+import com.tim04.school.facturing.persistence.Role.Roles;
+import com.tim04.school.facturing.persistence.supplier.Supplier;
+import com.tim04.school.facturing.persistence.user.MailProperties.MailProperties;
+import com.tim04.school.facturing.persistence.user.VerificationToken.VerificationToken;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "User")
+@Table(name = "users")
 public class User {
 
     @Id
-    @GeneratedValue
-    @Column(name = "USER_ID")
-    private Long userID;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @Column(name = "firstName")
-    @NotEmpty(message = "Please insert your First Name")
     private String firstName;
     @Column(name = "lastName")
-    //@NotEmpty(message = "Please insert your Last Name")
     private String lastName;
     @Column(name = "mail")
-    @NotEmpty(message = "Please insert your mail")
     private String mail;
     @Column(name = "password")
-    @NotEmpty(message = "Please insert your password")
     private String password;
     @Column(name = "age")
     private Integer age;
     @Column(name = "path")
     private String defaultPath;
-    //TODO: Documentare despre FetchType EAGER vs LAZY
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "USER_ROLE",
-            joinColumns = { @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID") }, inverseJoinColumns = {
-            @JoinColumn(name = "ROLE_ID", referencedColumnName = "ROLE_ID") })
-    private Set<Role> roles;
+    @OneToMany( mappedBy="user",cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Supplier> suppliers = new ArrayList<>();
+    @Column(name = "role")
+    private Roles roles;
+    @Column(name = "isActive")
+    private Boolean isActive;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true)
+    private VerificationToken verificationToken;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
+    private MailProperties mailProperties;
 
-    public Long getID() {
-        return userID;
+    public MailProperties getMailProperties() {
+        return mailProperties;
     }
 
-    public void setID(Long ID) {
-        this.userID = ID;
+    public void setMailProperties(MailProperties mailProperties) {
+        this.mailProperties = mailProperties;
+    }
+
+    public List<Supplier> getSuppliers() {
+        return suppliers;
+    }
+
+    public void setSuppliers(List<Supplier> suppliers) {
+        this.suppliers = suppliers;
+    }
+
+    public void setRoles(Roles roles) {
+        this.roles = roles;
+    }
+
+    public Roles getRoles() {
+        return roles;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getFirstName() {
@@ -79,21 +103,6 @@ public class User {
         this.password = password;
     }
 
-    public Long getUserID() {
-        return userID;
-    }
-
-    public void setUserID(Long userID) {
-        this.userID = userID;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
 
     public Integer getAge() {
         return age;
@@ -110,4 +119,22 @@ public class User {
     public void setDefaultPath(String defaultPath) {
         this.defaultPath = defaultPath;
     }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        this.isActive = active;
+    }
+
+    public VerificationToken getVerificationToken() {
+        return verificationToken;
+    }
+
+    public void setVerificationToken(VerificationToken verificationToken) {
+        this.verificationToken = verificationToken;
+    }
+
+
 }

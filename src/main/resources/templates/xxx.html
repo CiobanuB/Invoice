@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html class="fixed" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head >
+    <meta charset="UTF-8">
+    <title>Invoice Website</title>
+    <meta name="keywords" content="Invoice website for companies"/>
+    <meta name="description" content="Invoice website for companies">
+    <meta name="author" content="Ciobanu Bogdan">
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <!-- Web Fonts  -->
+    <link th:href="@{http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800|Shadows+Into+Light}"
+          rel="stylesheet" type="text/css">
+    <!-- Vendor CSS -->
+    <link th:href="@{http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800|Shadows+Into+Light}"
+          rel="stylesheet" type="text/css">
+    <!-- Vendor CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/vendor/bootstrap/css/bootstrap.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/vendor/font-awesome/css/font-awesome.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/vendor/magnific-popup/magnific-popup.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/vendor/bootstrap-datepicker/css/datepicker3.css}"/>
+
+    <!-- Specific Page Vendor CSS -->
+    <link rel="stylesheet" type="text/css"  th:href="@{/assets/vendor/select2/select2.css}"/>
+    <link rel="stylesheet"  type="text/css" th:href="@{/assets/vendor/jquery-datatables-bs3/assets/css/datatables.css}"/>
+
+    <!-- Theme CSS -->
+    <link rel="stylesheet"  type="text/css" th:href="@{/assets/stylesheets/theme.css}"/>
+
+    <!-- Skin CSS -->
+    <link rel="stylesheet" type="text/css"  th:href="@{/assets/stylesheets/skins/default.css}"/>
+
+    <!-- Theme Custom CSS -->
+    <link rel="stylesheet"  type="text/css" th:href="@{/assets/stylesheets/theme-custom.css}">
+
+    <!-- Head Libs -->
+    <script th:src="@{/assets/vendor/modernizr/modernizr.js}" type="text/javascript"></script>
+
+
+</head>
+<body class="body">
+<header class="header" th:replace="template :: header"></header>
+
+<div class="inner-wrapper">
+    <aside id="sidebar-left" class="sidebar-left" th:replace="template :: sidebar"></aside>
+    <section role="main" class="content-body">
+        <header class="page-header">
+            <div class="right-wrapper pull-right">
+                <ol class="breadcrumbs">
+                    <li>
+                        <a href="index.html">
+                            <i class="fa fa-home"></i>
+                        </a>
+                    </li>
+                    <li><span>Add / Edit Clients</span></li>
+                    <li><span>Section</span></li>
+                </ol>
+                <a class="sidebar-right-toggle" data-open="sidebar-right"><i class="fa fa-chevron-left"></i></a>
+            </div>
+        </header>
+        <!-- start: page -->
+        <section class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions">
+                    <a href="#" class="fa fa-caret-down"></a>
+                    <a href="#" class="fa fa-times"></a>
+                </div>
+                <h2 class="panel-title text-center ">Edit
+                    <span th:utext=${clientName}></span>
+                    client
+                </h2>
+             <!--   <div class="mb-md">
+                    <p class="text-center  text-uppercase validation-message" th:utext="${confirmationMessage}"></p>
+                </div>-->
+            </header>
+            <!--<div class="panel-body" >
+                <form th:action="@{clients/{clientId}/edit(clientId=$(client.id})}" th:object="${client}" th:method="post" class="form-horizontal"  >
+                    <section class="panel">
+
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Name : <span class="required">*</span></label>
+                                <input th:field="*{name}" type="text" class="form-control" id="recipient-name" name="recipient-name" required>
+                                <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error-message" id="name-edit"></span>
+                                <p class="error-message" id="edit-name"></p>
+                            </div>
+                            <div class="form-group">
+                                <label for="recipient-mailEdit" class="col-form-label">Mail : <span class="required">*</span></label>
+                                <input th:field="*{mail}" type="text" class="form-control" id="recipient-mailEdit" required>
+                                <p class="error-message" id="edit-mail"></p>
+                            </div>
+                            <div class="form-group">
+                                <label for="recipient-cifEdit" class="col-form-label">Cif: <span class="required">*</span></label>
+                                <input th:field="*{cif}" type="text" class="form-control" id="recipient-cifEdit" required>
+                                <p class="error-message" id="edit-cif"></p>
+                            </div>
+                            <div class="form-group" >
+                                <label for="mydateEdit" class="col-form-label">Calendar date: <span class="required">*</span></label>
+                                <div style="position:relative" class="myDatePickers">
+                                    <input th:field="*{regDate}" id="mydateEdit"  type="text" class="form-control time" data-date-format="dd/mm/yyyy" placeholder="Select a Date"  required>
+                                    &lt;!&ndash;<span class="glyphicon glyphicon-calendar customCalendar"></span>&ndash;&gt;
+                                    <p class="error-message" id="edit-date"></p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="recipient-adressEdit" class="col-form-label">Adress : <span class="required">*</span></label>
+                                <input th:field="*{adress}" type="text" class="form-control" id="recipient-adressEdit" required>
+                                <p class="error-message" id="edit-adress"></p>
+                            </div>
+                            <div class="form-group">
+                                <label for="recipient-contactEdit" class="col-form-label">Contact Person : <span class="required">*</span></label>
+                                <input th:field="*{contactPerson}" type="text" class="form-control" id="recipient-contactEdit" required>
+                                <p class="error-message" id="edit-contact"></p>
+                            </div>
+
+                        </div>
+                        <footer >
+                            <div class="row">
+                                <div class="col-sm-9 col-sm-offset-3">
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                            </div>
+                        </footer>
+                    </section>
+                </form>
+            </div>-->
+        </section>
+        <!-- end: page -->
+    </section>
+</div>
+
+<!-- Vendor -->
+<script th:src="@{/assets/vendor/jquery/jquery.js}"  type="text/javascript"></script>
+<script th:src="@{/assets/vendor/jquery-browser-mobile/jquery.browser.mobile.js}"  type="text/javascript"></script>
+<script th:src="@{/assets/vendor/bootstrap/js/bootstrap.js}"  type="text/javascript"></script>
+<script th:src="@{/assets/vendor/nanoscroller/nanoscroller.js}"  type="text/javascript"></script>
+<script th:src="@{/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js}"  type="text/javascript"></script>
+<script th:src="@{/assets/vendor/magnific-popup/magnific-popup.js}"  type="text/javascript"></script>
+<script th:src="@{/assets/vendor/jquery-placeholder/jquery.placeholder.js}"  type="text/javascript"></script>
+
+<!-- Specific Page Vendor -->
+<script th:src="@{/assets/vendor/select2/select2.js}"  type="text/javascript"></script>
+<script th:src="@{/assets/vendor/jquery-datatables/media/js/jquery.dataTables.js}"  type="text/javascript"></script>
+<script th:src="@{/assets/vendor/jquery-datatables-bs3/assets/js/datatables.js}"  type="text/javascript"></script>
+
+<!-- Theme Base, Components and Settings -->
+<script th:src="@{/assets/javascripts/theme.js}"  type="text/javascript"></script>
+
+<!-- Theme Custom -->
+<script th:src="@{/assets/javascripts/theme.custom.js}"  type="text/javascript"></script>
+
+<!-- Theme Initialization Files -->
+<script th:src="@{/assets/javascripts/theme.init.js}"  type="text/javascript"></script>
+
+
+<!-- Examples -->
+<script th:src="@{/assets/javascripts/tables/examples.datatables.editable.js}"  type="text/javascript"></script>
+
+<script th:src="@{/assets/javascripts/forms/editClient.js}"  type="text/javascript"></script>
+</body>
+</html>

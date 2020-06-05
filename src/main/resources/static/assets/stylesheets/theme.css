@@ -3013,9 +3013,28 @@ html.dark .text-muted {
     font-weight: 1400;
     padding: 12px 0px 8px 0px;
 }
+.validation-message{
+    font-size: 20px;
+    font-weight: 1400;
+    padding: 12px 0px 8px 0px;
+}
+.validation-error{
+text-align: center;
+}
+.padding-item{
+ padding: 10px 0px 12px 0px;
+}
+.submit-button{
+ padding: 12px 0px 10px 0px;
+}
 .error-message{
 color: #f20e0e ;
  font-size: 12px;
+ font-weight: 1400;
+}
+.error-message-17{
+color: #f20e0e ;
+ font-size: 17px;
  font-weight: 1400;
 }
 .failure-message{
@@ -8722,6 +8741,38 @@ html.dark .toggle > label {
 	position: relative;
 	top: -10px;
 	color: #cccccc;
+}
+.modal-title {
+    margin-bottom: 0;
+    line-height: 1.5;
+}
+.modal-top {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: start;
+    align-items: flex-start;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    padding: 1rem 1rem;
+    border-bottom: 1px solid #dee2e6;
+    border-top-left-radius: calc(.3rem - 1px);
+    border-top-right-radius: calc(.3rem - 1px);
+}
+.panel-modal-top {
+    padding-top:7px;
+    padding-bottom:5px;
+    font-weight:600;
+    font-size: 25px;
+    text-align: center;
+    position: center;
+}
+
+.col-form-label {
+    padding-top: calc(.375rem + 1px);
+    padding-left: calc(.375rem + 2px);
+    font-size: 17px;
+    line-height: 1.5;
+    font-weight: 400;
 }
 
 .modal-icon.center {
@@ -15486,6 +15537,8 @@ html.dark .invoice table.table > tbody tr > td {
 	background: none;
 	z-index: 9999;
 }
+
+
 
 /* dark */
 html.dark .body-sign .panel-sign .panel-body {

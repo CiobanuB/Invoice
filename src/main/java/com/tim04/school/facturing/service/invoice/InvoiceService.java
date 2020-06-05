@@ -16,6 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -29,6 +33,8 @@ public class InvoiceService {
     private ClientService clientService;
     @Autowired
     private SupplierService supplierService;
+    @Autowired
+    private InvoiceService invoiceService;
 
 
     @Autowired
@@ -40,8 +46,8 @@ public class InvoiceService {
         return invoiceRepository;
     }
 
-    @Transactional
-    private void save(Integer invoiceSeries, Date printDate, String clientName, int unityMeasure, int sum, String services, int pieces, int vat) {
+/*    @Transactional
+    private void save(Integer invoiceSeries, String printDate, String clientName, int unityMeasure, int sum, String services, int pieces, int vat) throws ParseException {
         Invoice theInvoice = new Invoice();
         theInvoice.setInvoiceSeries(invoiceSeries);
         theInvoice.setPrintDate(printDate);
@@ -51,29 +57,50 @@ public class InvoiceService {
         theInvoice.setServices(services);
         theInvoice.setPieces(pieces);
         invoiceRepository.save(theInvoice);
+    }*/
+
+    @Transactional
+    public void save(Invoice invoice) throws ParseException {
+        Supplier supplier = supplierService.getTheSupplier();
+        Optional<Client> optionalClient = clientService.findClientByName(invoice.getClientName());
+        Client client = optionalClient.get();
+        if (optionalClient.isPresent()) invoice.setClient(client);
+        invoice.setSupplier(supplier);
+        invoiceRepository.save(invoice);
     }
 
-    @Transactional(readOnly = true)
     public Invoice findInvoice(String clientName) {
         Invoice theInvoice = invoiceRepository.findInvoiceByClientName(clientName);
         return theInvoice;
     }
 
-    @Transactional(readOnly = true)
     public List<Invoice> findAll() {
         List<Invoice> theList = invoiceRepository.findAll();
         return theList;
     }
 
     public void generateClientFolder(String path) {
-        File file = new File(path);
-        User user = userService.findLogged();
-        List<Client> clientList = clientService.findByUserID();
+        List<Client> clientList = clientService.findAllClientsByUser();
+        Path locationPath = Paths.get(path);
+        if (Files.isDirectory(locationPath)) {
+            System.out.println(Files.isDirectory(locationPath));
+            File file = new File(path);
+            generateBackupFolders(clientList, file, path);
+        } else {
+            File makeFolder = new File(path);
+            makeFolder.mkdir();
+            generateBackupFolders(clientList, makeFolder, path);
+        }
+    }
+
+    public void generateBackupFolders(List<Client> clientList, File file, String path) {
         for (Client client : clientList) {
             boolean flag = false;
-            for (File theFile : file.listFiles()) {
-                if (theFile.isDirectory() && theFile.getName().equals(client.getName())) {
-                    flag = true;
+            if (file.length() != 0) {
+                for (File theFile : file.listFiles()) {
+                    if (theFile.isDirectory() && theFile.getName().equals(client.getName())) {
+                        flag = true;
+                    }
                 }
             }
             if (!flag) {
@@ -84,19 +111,23 @@ public class InvoiceService {
     }
 
 
-    public String generateReport(String path, Invoice invoice,String clientName) {
+    public void savePathUser(User user) {
+        User loggedUser = userService.findLogged();
+        invoiceService.generateClientFolder(user.getDefaultPath());
+        loggedUser.setDefaultPath(user.getDefaultPath());
+        userService.save(loggedUser);
+    }
+
+    /* public String generateReport(String path, Invoice invoice,String clientName) { */
+    public String generateReport(String path, Invoice invoice, String clientName) {
         try {
+            Supplier theSupplier = supplierService.getTheSupplier();
+            Client client = invoice.getClient();
+            Map<String, Object> supplierMap = supplierService.supplierMap(invoice);
+            Map<String, Object> clientMap = clientService.clientMap(invoice);
+            Map<String, Object> invoiceMap = invoiceService.invoiceMap(invoice);
 
-            Supplier theSupplier = supplierService.getSupplier();
-            Map<String, Object> supplierMap = supplierService.supplierMap(theSupplier);
-            Map<String, Object> clientMap = clientService.clientMap(clientName);
 
-            Map<String, Object> invoiceItem = new HashMap<String, Object>();
-            invoiceItem.put("InvoiceID", invoice.getInvoiceID());
-            invoiceItem.put("services", invoice.getServices());
-            invoiceItem.put("price", invoice.getTotalPrice());
-            invoiceItem.put("quantity", invoice.getPieces());
-            invoiceItem.put("unityMeasure", invoice.getUnityMeasure());
             // Add parameters
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("createdBy", "Websparrow.org");
@@ -115,7 +146,7 @@ public class InvoiceService {
             // Fill the report
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, jrBeanCollectionDataSource);
             // Export the report to a PDF file
-            JasperExportManager.exportReportToPdfFile(jasperPrint, thePath + "\\testing22.pdf");
+            JasperExportManager.exportReportToPdfFile(jasperPrint, thePath + "\\" + invoice.getClientName());
             System.out.println("Done");
             return "Report successfully generated @path= " + thePath;
         } catch (Exception e) {
@@ -132,34 +163,42 @@ public class InvoiceService {
     }
 
 
-    public Map<String, Object> invoiceMap( Invoice invoice) {
-        Map<String, Object> invoiceItems = new HashMap<String, Object>();
-            Map<String, Object> item = new HashMap<String, Object>();
-            item.put("InvoiceID", invoice.getInvoiceID());
-            item.put("services", invoice.getServices());
-            item.put("price", invoice.getTotalPrice());
-            item.put("quantity", invoice.getPieces());
-            item.put("unityMeasure", invoice.getUnityMeasure());
+    public Map<String, Object> invoiceMap(Invoice invoice) {
+        Map<String, Object> invoiceItems = new HashMap<>();
+        Optional<Invoice> optionalInvoice = invoiceRepository.findInvoiceByinvoiceSeries(invoice.getInvoiceSeries());
+        if(optionalInvoice.isPresent()){
+            invoiceItems.put("InvoiceID", invoice.getInvoiceID());
+            invoiceItems.put("services", invoice.getServices());
+            invoiceItems.put("price", invoice.getTotalPrice());
+            invoiceItems.put("quantity", invoice.getPieces());
+            invoiceItems.put("unityMeasure", invoice.getUnityMeasure());
+        }
         return invoiceItems;
     }
+
     @Transactional(readOnly = true)
-    public List<Invoice> getListInvoice(){
-        List<Invoice> getList = invoiceRepository.findAll();
+    public List<Invoice> getListInvoice() {
+        List<String> clients = invoiceRepository.findDistinctOnes();
+        List<Invoice> getList = invoiceRepository.findDistinctClients();
+
         return getList;
     }
 
-/*    public Map<String, Supplier> invoiceMap(List<Supplier> invoiceList) {
-        Map<String, Supplier> invoiceItems = new HashMap<String, Supplier>();
-        for (Invoice invoice : invoiceList) {
-            Map<String, Object> item = new HashMap<String, Object>();
-            item.put("InvoiceID", invoice.getInvoiceID());
-            item.put("services", invoice.getServices());
-            item.put("price", invoice.getTotalPrice());
-            item.put("quantity", invoice.getPieces());
-            item.put("unityMeasure", invoice.getUnityMeasure());
-        }
-        return invoiceItems;
-    }*/
+    public Optional<List<Invoice>> getAllInvoices() {
+        Supplier supplier = supplierService.getTheSupplier();
+        Optional<List<Invoice>> getAllInvoices = invoiceRepository.findAllBySupplier(supplier);
+        if (!getAllInvoices.isPresent()) return Optional.empty();
+        return getAllInvoices;
+    }
+    public Optional<Invoice> getInvoiceSeries(Integer seriesId) {
+        Optional<Invoice> optionalInvoice = invoiceRepository.findInvoiceByinvoiceSeries(seriesId);
+        if (!optionalInvoice.isPresent()) return Optional.empty();
+        return optionalInvoice;
+    }
 
+    public List<Invoice> distinctInvoices() {
+        List<Invoice> distinctClients = invoiceRepository.findDistinctClients();
+        return distinctClients;
+    }
 
 }

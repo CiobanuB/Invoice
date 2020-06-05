@@ -1,6 +1,12 @@
 package com.tim04.school.facturing.persistence.supplier;
 
+import com.tim04.school.facturing.persistence.client.Client;
+import com.tim04.school.facturing.persistence.invoice.Invoice;
+import com.tim04.school.facturing.persistence.user.User;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Supplier")
@@ -15,15 +21,20 @@ public class Supplier {
     @Column(name = "mail")
     private String mail;
     @Column(name = "cifSupplier")
-    private Integer cifSupplier;
+    private String cifSupplier;
     @Column(name = "Adress")
     private String adress;
     @Column(name = "bankAccount")
     private String bankAccount;
     @Column(name = "website")
     private String website;
-    @Column(name = "userMail")
-    private String userMail;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="user_id")
+    private User user ;
+    @OneToMany( mappedBy="supplier",cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Client> clients = new ArrayList<>();
+    @OneToMany( mappedBy="supplier",cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Invoice> invoices = new ArrayList<>();
 
     public Long getSupplierID() {
         return supplierID;
@@ -57,11 +68,11 @@ public class Supplier {
         this.mail = mail;
     }
 
-    public Integer getCifSupplier() {
+    public String getCifSupplier() {
         return cifSupplier;
     }
 
-    public void setCifSupplier(Integer cifSupplier) {
+    public void setCifSupplier(String cifSupplier) {
         this.cifSupplier = cifSupplier;
     }
 
@@ -90,13 +101,30 @@ public class Supplier {
     }
 
 
-    public String getUserMail() {
-        return userMail;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserMail(String userMail) {
-        this.userMail = userMail;
+    public void setUser(User user) {
+        this.user = user;
     }
+
+    public List<Client> getClients() {
+        return clients;
+    }
+
+    public void setClients(List<Client> clients) {
+        this.clients = clients;
+    }
+
+    public List<Invoice> getInvoices() {
+        return invoices;
+    }
+
+    public void setInvoices(List<Invoice> invoices) {
+        this.invoices = invoices;
+    }
+
 
     @Override
     public String toString() {
@@ -105,10 +133,14 @@ public class Supplier {
                 ", name='" + name + '\'' +
                 ", regDate='" + regDate + '\'' +
                 ", mail='" + mail + '\'' +
-                ", cifSupplier=" + cifSupplier +
+                ", cifSupplier='" + cifSupplier + '\'' +
                 ", adress='" + adress + '\'' +
                 ", bankAccount='" + bankAccount + '\'' +
                 ", website='" + website + '\'' +
+                ", user=" + user +
+                ", clients=" + clients +
                 '}';
     }
+
+
 }

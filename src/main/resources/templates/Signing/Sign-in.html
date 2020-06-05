@@ -56,14 +56,13 @@
 										<span class="icon icon-lg">
 											<i class="fa fa-user"></i>
 										</span>
-									</span>
+							</span>
 						</div>
 					</div>
-
 					<div class="form-group mb-lg">
 						<div class="clearfix">
 							<label class="pull-left">Password</label>
-							<a href="pages-recover-password.html" class="pull-right">Lost Password?</a>
+							<a th:href="@{/reset-password}" class="pull-right">Lost Password?</a>
 						</div>
 						<div class="input-group input-group-icon">
 							<input th:field="*{password}" type="password" class="form-control input-lg" />
@@ -87,18 +86,18 @@
 							<button type="submit" value="Submit" th:text="Login" class="btn btn-primary btn-block btn-lg visible-xs mt-lg">Sign In</button>
 							</button>
 						</div>
-						<div class="row" th:if="${param.error}">
+						<div class="row" th:if="${param.error}" >
 							<div class="col-sm-12 text-center failure-message">
 							<p class = "text-center text-uppercase">Incorrect mail or password</p>
 							</div>
 						</div>
+
+
 					</div>
 					<br>
 
-
-					<p class="text-center">Don't have an account yet? <a th:href="@{/Sign-up}">Sign Up!</a></p>
-
 				</form>
+				<p class="text-center">Don't have an account yet? <a th:href="@{/Sign-up}">Sign Up!</a></p>
 			</div>
 		</div>
 

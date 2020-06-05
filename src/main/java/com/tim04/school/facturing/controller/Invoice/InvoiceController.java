@@ -2,9 +2,11 @@ package com.tim04.school.facturing.controller.Invoice;
 
 import com.tim04.school.facturing.persistence.client.Client;
 import com.tim04.school.facturing.persistence.invoice.Invoice;
+import com.tim04.school.facturing.persistence.supplier.Supplier;
 import com.tim04.school.facturing.persistence.user.User;
 import com.tim04.school.facturing.service.client.ClientService;
 import com.tim04.school.facturing.service.invoice.InvoiceService;
+import com.tim04.school.facturing.service.supplier.SupplierService;
 import com.tim04.school.facturing.user.UserService;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -17,11 +19,13 @@ import org.springframework.util.ResourceUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,40 +37,60 @@ public class InvoiceController {
     private InvoiceService invoiceService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private ClientService clientService;
+    @Autowired
+    private SupplierService supplierService;
 
-
-    @RequestMapping(value = {"/", ""}, method = RequestMethod.GET)
-    public ModelAndView invoice() throws FileNotFoundException, JRException {
+    @GetMapping
+    public ModelAndView invoice() {
         ModelAndView modelAndView = new ModelAndView();
-        User user = userService.findLogged();
+        Supplier findSupplier = supplierService.getTheSupplier();
+        User user = findSupplier.getUser();
+        List<Client> listClients = findSupplier.getClients();
+        List<Invoice> invoiceList = invoiceService.distinctInvoices();
+
+        modelAndView.setViewName("Invoice/Invoice");
         modelAndView.addObject("user", user);
-        List<Invoice> invoiceList = invoiceService.getListInvoice();
-        modelAndView.addObject("invoiceList",invoiceList);
-        modelAndView.setViewName("Invoice/Invoice.html");
+        modelAndView.addObject("invoice", new Invoice());
+        modelAndView.addObject("invoiceList", invoiceList);
+        modelAndView.addObject("clientList", listClients);
+
         return modelAndView;
     }
 
 
-
-/*
-    @GetMapping()
-    public String generateFolder(@RequestParam("defaultPath") String path) {
-        return invoiceService.generateClientFolder();
-    }
-*/
-
-
-    @PostMapping()
-    public ModelAndView savePath(@RequestParam(value = "defaultPath") String path, @ModelAttribute("invoice") Invoice invoice,@RequestParam(value = "clientName") String clientName) {
+    @PostMapping(value = "/addPath")
+    public ModelAndView savePath(@ModelAttribute("User") User user, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         ModelAndView modelAndView = new ModelAndView();
-        System.out.println(path);
-        User user = userService.findLogged();
-    //    invoiceService.generateClientFolder(path);
-        user.setDefaultPath(path);
-        userService.updateUser(user);
-        invoiceService.generateReport(path,invoice,clientName);
-        modelAndView.addObject("user", user);
-        modelAndView.setViewName("Invoice/Invoice");
+
+        if(bindingResult.hasErrors()){
+            modelAndView.addObject("pathValidation","Invalid folder path");
+            modelAndView.setViewName("Invoice/Invoice");
+        } else {
+            invoiceService.savePathUser(user);
+            redirectAttributes.addFlashAttribute("pathValidation", "Default path has been saved !");
+            modelAndView.setViewName("redirect:/Invoice");
+        }
+        /*invoiceService.generateReport(path,invoice,clientName);*/
+        //modelAndView.addObject("defaultPath", path);
+        return modelAndView;
+    }
+    @PostMapping(value = "/addInvoice")
+    public ModelAndView savePath(@ModelAttribute("invoice") Invoice invoice, BindingResult bindingResult, RedirectAttributes redirectAttributes) throws ParseException {
+        ModelAndView modelAndView = new ModelAndView();
+
+        if(bindingResult.hasErrors()){
+            modelAndView.addObject("confirmationMessage","We could not add the invoice");
+            modelAndView.setViewName("Invoice/Invoice");
+        } else {
+            invoiceService.save(invoice);
+            redirectAttributes.addAttribute("invoice", new Invoice());
+            redirectAttributes.addFlashAttribute("confirmationMessage", "Invoice has been added!");
+            modelAndView.setViewName("redirect:/Invoice");
+        }
+        //invoiceService.generateReport(path,invoice,clientName);
+        //modelAndView.addObject("defaultPath", path);
         return modelAndView;
     }
 

@@ -1,16 +1,28 @@
 package com.tim04.school.facturing.persistence.client;
 
+import com.tim04.school.facturing.persistence.invoice.Invoice;
+import com.tim04.school.facturing.persistence.supplier.Supplier;
+import com.tim04.school.facturing.persistence.user.User;
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name = "Client")
 public class Client {
     @Id
-    @GeneratedValue
-    private Long clientID;
-    @Column(name = "userID")
-    private Long userID;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="user_id")
+    private User user;
     @Column(name = "name")
     private String name;
     @Column(name = "regDate")
@@ -23,22 +35,28 @@ public class Client {
     private String adress;
     @Column(name = "contactPerson")
     private String contactPerson;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="supplier_id")
+    private Supplier supplier;
+    @OneToMany( mappedBy="client",cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Invoice> invoices = new ArrayList<>();
 
 
-   public Long getClientID() {
-        return clientID;
+
+    public User getUser() {
+        return user;
     }
 
-    public void setClientID(Long clientID) {
-        this.clientID = clientID;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public Long getUserID() {
-        return userID;
+    public Long getId() {
+        return id;
     }
 
-    public void setUserID(Long userID) {
-        this.userID = userID;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -56,6 +74,26 @@ public class Client {
     public void setRegDate(String regDate) {
         this.regDate = regDate;
     }
+    /*    public Date getRegDate() {
+        return (Date) this.regDate.clone();
+    }
+    public String getDate(){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        String date = dateFormat.format(this.regDate);
+        return date;
+    }
+
+    public Date setRegDate(String date) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        this.regDate = dateFormat.parse(date);
+        return this.regDate;
+    }
+    public String getCurrentDate() {
+        SimpleDateFormat theDate = new SimpleDateFormat("dd-MM-yyyy");
+        Date date = Calendar.getInstance().getTime();
+        return theDate.format(date);
+
+    }*/
 
     public String getMail() {
         return mail;
@@ -89,11 +127,26 @@ public class Client {
         this.contactPerson = contactPerson;
     }
 
+    public Supplier getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(Supplier supplier) {
+        this.supplier = supplier;
+    }
+
+    public List<Invoice> getInvoices() {
+        return invoices;
+    }
+
+    public void setInvoices(List<Invoice> invoices) {
+        this.invoices = invoices;
+    }
+
     @Override
     public String toString() {
         return "Client{" +
-                "clientID=" + clientID +
-                ", userID=" + userID +
+                "id=" + id +
                 ", name='" + name + '\'' +
                 ", regDate='" + regDate + '\'' +
                 ", mail='" + mail + '\'' +

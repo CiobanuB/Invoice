@@ -5553,6 +5553,10 @@ button.close {
   margin: 0;
   line-height: 1.42857143;
 }
+.modals-middle{
+    position: relative;
+    padding: 15px;
+}
 .modal-body {
   position: relative;
   padding: 15px;

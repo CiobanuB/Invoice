@@ -1,6 +1,8 @@
 package com.tim04.school.facturing.controller.Sign;
 
 import com.tim04.school.facturing.persistence.user.User;
+
+import com.tim04.school.facturing.user.TokenService.VerificationTokenService;
 import com.tim04.school.facturing.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,24 +19,19 @@ public class SignController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private VerificationTokenService verificationTokenService;
+
     @GetMapping("/login")
     public String login(Model modelAndView) {
-//        ModelAndView modelAndView = new ModelAndView();
-        User user = new User();
+       User user = new User();
         modelAndView.addAttribute("user", user);
 //        modelAndView.addObject("user", user);
 //        modelAndView.setViewName("Signing/Sign-in");
         return "Signing/Sign-in.html";
     }
 
-//    @PostMapping("/login")
-//    public ModelAndView login(@ModelAttribute User user) {
-//        ModelAndView modelAndView = new ModelAndView();
-//
-//        modelAndView.addObject("user", user);
-//        modelAndView.setViewName("Signing/Sign-in");
-//        return modelAndView;
-//    }
+
 
     @GetMapping("/Sign-up")
     public ModelAndView signUp() {
@@ -56,13 +53,30 @@ public class SignController {
             modelAndView.setViewName("Signing/Sign-up");
         } else {
             userService.saveUser(user);
-            modelAndView.addObject("successMessage", "User has been created succesfully !");
+            verificationTokenService.createVerification(user);
             modelAndView.addObject("user", new User());
+            modelAndView.addObject("successMessage", "Your account has been created ! Check your mail to activate it ! ");
             modelAndView.setViewName("Signing/Sign-up");
         }
         return modelAndView;
     }
-
+  /*  @GetMapping("/verify-email")
+    @ResponseBody
+    public String emailVerification(String code,ModelAndView modelAndView) {
+       *//* modelAndView.setViewName("");
+        String validationMessage = VerificationTokenService.verifyEmail(code).getBody();
+        modelAndView.addObject("verification", validationMessage);*//*
+        modelAndView.setViewName("Signing/Email-verification");
+        return verificationTokenService.verifyEmail(code).getBody();
+    }*/
+  @GetMapping("/verify-email")
+  public ModelAndView emailVerification(String code) {
+      ModelAndView modelAndView = new ModelAndView();
+      String validationMessage = verificationTokenService.verifyEmail(code);
+      modelAndView.addObject("validation", validationMessage);
+      modelAndView.setViewName("Signing/Email-verification");
+      return modelAndView;
+  }
     @GetMapping("/logout")
     public ModelAndView logout() {
         ModelAndView modelAndView = new ModelAndView();
