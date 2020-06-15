@@ -1,6 +1,6 @@
 package com.tim04.school.facturing.user.login;
 
-import com.tim04.school.facturing.persistence.Role.Roles;
+import com.tim04.school.facturing.persistence.role.Roles;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

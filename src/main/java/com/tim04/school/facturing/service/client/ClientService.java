@@ -90,8 +90,21 @@ public class ClientService {
         Client findClient = clientRepository.findByNameAndUserId(client.getName(), currentUser.getId());
         return findClient;
     }
+    public Optional<Client> findClientByName(String name){
+        Supplier supplier = supplierService.getTheSupplier();
+        Optional<Client> optionalClient = clientRepository.findByNameAndSupplier(name,supplier);
+        if(!optionalClient.isPresent()) return Optional.empty();
+        return optionalClient;
+    }
+    public Optional<Client> findClientByCif(Integer cif){
+        Supplier supplier = supplierService.getTheSupplier();
+        Optional<Client> optionalClient = clientRepository.findByCifAndSupplier(cif,supplier);
+        if(!optionalClient.isPresent()) return Optional.empty();
+        return optionalClient;
+    }
 
-    public Client updateClient(Client client) {
+
+    public void updateClient(Client client) {
         Optional<Client> optionalClient = clientRepository.findById(client.getId());
         Client findClient = optionalClient.get();
         findClient.setName(client.getName());
@@ -100,15 +113,14 @@ public class ClientService {
         findClient.setCif(client.getCif());
         findClient.setAdress(client.getAdress());
         findClient.setContactPerson(client.getContactPerson());
-        return findClient;
+        clientRepository.save(findClient);
     }
 
-    public Map<String, Object> clientMap(Invoice invoice) {
-        Map<String, Object> clientItems = new HashMap<>();
+    public Map<String, Object> clientMap(Invoice invoice, Map<String, Object> clientItems) {
         Optional<Invoice> optionalInvoice = invoiceService.getInvoiceSeries(invoice.getInvoiceSeries());
-        Invoice findInvoice = optionalInvoice.get();
-        Client client = findInvoice.getClient();
         if (optionalInvoice.isPresent()) {
+            Invoice findInvoice = optionalInvoice.get();
+            Client client = findInvoice.getClient();
             clientItems.put("clientName", client.getName());
             clientItems.put("clientCif", client.getCif());
             clientItems.put("clientRegDate", client.getRegDate());
@@ -118,8 +130,7 @@ public class ClientService {
     }
 
     public Optional<Client> findById(Long id) {
-        User loggedUser = userService.findLogged();
-        Optional<Client> optionalClient = clientRepository.findByIdAndUser(id, loggedUser);
+        Optional<Client> optionalClient = clientRepository.findById(id);
         if (optionalClient.isPresent()) return optionalClient;
         return Optional.empty();
     }
@@ -129,9 +140,5 @@ public class ClientService {
         Optional<Client> findClient = clientRepository.findById(clientId);
     }
 
-    public Optional<Client> findClientByName(String clientName) {
-        Optional<Client> optionalClient = clientRepository.findByName(clientName);
-        if (optionalClient.isPresent()) return optionalClient;
-        return Optional.empty();
-    }
+
 }

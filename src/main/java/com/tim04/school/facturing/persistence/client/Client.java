@@ -20,7 +20,7 @@ public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
     @Column(name = "name")
@@ -35,7 +35,7 @@ public class Client {
     private String adress;
     @Column(name = "contactPerson")
     private String contactPerson;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="supplier_id")
     private Supplier supplier;
     @OneToMany( mappedBy="client",cascade=CascadeType.ALL, fetch = FetchType.LAZY)

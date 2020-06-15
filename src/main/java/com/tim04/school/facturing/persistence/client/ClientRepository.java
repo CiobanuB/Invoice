@@ -1,5 +1,6 @@
 package com.tim04.school.facturing.persistence.client;
 
+import com.tim04.school.facturing.persistence.supplier.Supplier;
 import com.tim04.school.facturing.persistence.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -11,9 +12,9 @@ import java.util.Optional;
 
 @Repository
 public interface ClientRepository extends JpaRepository<Client, Long> {
-    Optional<Client> findByName(String name);
+    Optional<Client> findByNameAndSupplier(String name, Supplier supplier);
 
-    Client findByCif(int cui);
+   Optional<Client> findByCif(Integer cif);
 
     Client findByMail(String mail);
 
@@ -27,5 +28,5 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
     Optional<Client> findById(Long id);
 
-
+    Optional<Client> findByCifAndSupplier(Integer cif, Supplier supplier);
 }

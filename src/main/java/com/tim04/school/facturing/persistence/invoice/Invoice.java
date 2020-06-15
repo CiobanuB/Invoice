@@ -18,9 +18,9 @@ public class Invoice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long InvoiceID;
+    private Long id;
     @Column(name = "invoiceSeries")
-    private Integer invoiceSeries;
+    private String invoiceSeries;
     @Column(name = "printDate")
     private String printDate;
     @Column(name = "clientName")
@@ -37,19 +37,21 @@ public class Invoice {
     private Integer unitPrice;
     @Column(name = "totalPrice")
     private Integer totalPrice;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="supplier_id")
     private Supplier supplier ;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="client_id")
     private Client client ;
 
-    public Long getInvoiceID() {
-        return InvoiceID;
+
+
+    public Long getId() {
+        return id;
     }
 
-    public void setInvoiceID(Long invoiceID) {
-        InvoiceID = invoiceID;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Integer getInvoiceSeries() {
@@ -162,19 +164,5 @@ public class Invoice {
     }
 
 
-    @Override
-    public String toString() {
-        return "Invoice{" +
-                "InvoiceID=" + InvoiceID +
-                ", invoiceSeries=" + invoiceSeries +
-                ", printDate='" + printDate + '\'' +
-                ", clientName='" + clientName + '\'' +
-                ", unityMeasure=" + unityMeasure +
-                ", sum=" + sum +
-                ", services='" + services + '\'' +
-                ", pieces=" + pieces +
-                ", unitPrice=" + unitPrice +
-                ", totalPrice=" + totalPrice +
-                '}';
-    }
+
 }

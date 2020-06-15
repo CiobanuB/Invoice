@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html class="fixed" lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- Specific Page Vendor CSS -->
+    <link rel="stylesheet" href="assets/vendor/select2/select2.css"/>
+    <link rel="stylesheet" href="assets/vendor/jquery-datatables-bs3/assets/css/datatables.css"/>
+
+    <!--&lt;!&ndash; BootStrap http javascript &ndash;&gt;
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>-->
+
+
+</head>
+<head th:include="template :: head"></head>
+<body class="body">
+<header class="header" th:replace="template :: header"></header>
+
+<div class="inner-wrapper" >
+    <aside id="sidebar-left" class="sidebar-left" th:replace="template :: sidebar"></aside>
+    <section role="main" class="content-body" >
+        <header class="page-header" >
+            <h2>Invoice</h2>
+            <div class="right-wrapper pull-right">
+                <ol class="breadcrumbs">
+                    <li>
+                        <a href="index.html">
+                            <i class="fa fa-home"></i>
+                        </a>
+                    </li>
+                    <li><span>Invoice</span></li>
+                    <li><span>Section</span></li>
+                </ol>
+                <a class="sidebar-right-toggle" data-open="sidebar-right"><i class="fa fa-chevron-left"></i></a>
+            </div>
+        </header>
+        <!-- start: page -->
+        <section class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions">
+                    <a href="#" class="fa fa-caret-down"></a>
+                    <a href="#" class="fa fa-times"></a>
+                </div>
+                <h4 class="panel-title text-center">Check invoice details before sending mail</h4>
+                <div class="mb-md">
+                    <p class="text-center  text-uppercase validation-message" th:utext="${confirmationMessage}"></p>
+                </div>
+            </header>
+
+            <div class="panel-body" >
+                    <form  th:action="@{/Invoice/{id}/Send-invoice(id=${invoice.id})}" th:object="${invoice}" th:method="post" onsubmit="return validateEditInvoice();" >
+
+                        <div class="form-group">
+                            <label for="recipient-client-edit" class="col-sm-3 control-label">Client name :</label>
+                                <input th:field="*{clientName}"   type="text" class="form-control"  id="recipient-client-edit" readonly="readonly" >
+                                <p class="error-message" id="validation-nameInvoice-edit"></p>
+                        </div>
+                        <div class="form-group" >
+                            <label for="recipient-date-edit" class="col-form-label">Date:</label>
+                            <div style="position:relative" class="myDatePickers">
+                                <input th:field="*{printDate}" type="text" class="form-control time" data-date-format="dd-mm-yyyy" placeholder="Select a Date" id="recipient-date-edit" >
+                                <p class="error-message" id="validation-date-edit"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-series-edit" class="col-form-label">Invoice Series:</label>
+                            <input th:field="*{invoiceSeries}" type="text" class="form-control" id="recipient-series-edit" >
+                            <p class="error-message" id="validation-series-edit"></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-services-edit" class="col-form-label">Service name :</label>
+                            <input th:field="*{services}" type="text" class="form-control" id="recipient-services-edit" >
+                            <p class="error-message" id="validation-services-edit"></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-pieces-edit" class="col-form-label">Pieces :</label>
+                            <input th:field="*{pieces}" type="text" class="form-control" id="recipient-pieces-edit" >
+                            <p class="error-message" id="validation-pieces-edit"></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-unity-edit" class="col-form-label">Unit Measure :</label>
+                            <input th:field="*{unityMeasure}" type="text" class="form-control" id="recipient-unity-edit" >
+                            <p class="error-message" id="validation-unity-edit"></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-unitprice-edit" class="col-form-label">Unit Price :</label>
+                            <input th:field="*{unitPrice}" type="text" class="form-control" id="recipient-unitprice-edit" >
+                            <p class="error-message" id="validation-unitprice-edit"></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-sum-edit" class="col-form-label">Sum :</label>
+                            <input th:field="*{sum}" type="text" class="form-control" id="recipient-sum-edit" >
+                            <p class="error-message" id="validation-sum-edit"></p>
+                        </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Send mail</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- end: page -->
+    </section>
+</div>
+
+
+
+
+<!-- Vendor -->
+<div th:include="template :: javascript-botom"></div>
+
+
+<!-- Examples -->
+<script src="assets/javascripts/forms/modals.js"></script>
+<script src="assets/javascripts/forms/validate.invoice.edit.js"></script>
+<script src="assets/javascripts/tables/examples.datatables.editableInvoice.js"></script>
+
+</body>
+</html>

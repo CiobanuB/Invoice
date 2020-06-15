@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html class="fixed" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head >
+    <meta charset="UTF-8">
+    <title>Invoice Website</title>
+    <meta name="keywords" content="Invoice website for companies"/>
+    <meta name="description" content="Invoice website for companies">
+    <meta name="author" content="Ciobanu Bogdan">
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <!-- Web Fonts  -->
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800|Shadows+Into+Light"
+          rel="stylesheet" type="text/css">
+    <!-- Vendor CSS -->
+    <link rel="stylesheet" th:href="@{/assets/vendor/bootstrap/css/bootstrap.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/font-awesome/css/font-awesome.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/magnific-popup/magnific-popup.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/bootstrap-datepicker/css/datepicker3.css}"/>
+
+    <!-- Specific Page Vendor CSS -->
+    <link rel="stylesheet" th:href="@{/assets/vendor/select2/select2.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/vendor/jquery-datatables-bs3/assets/css/datatables.css}"/>
+
+    <!-- Theme CSS -->
+    <link rel="stylesheet" th:href="@{/assets/stylesheets/theme.css}"/>
+
+    <!-- Skin CSS -->
+    <link rel="stylesheet" th:href="@{/assets/stylesheets/skins/default.css}"/>
+
+    <!-- Theme Custom CSS -->
+    <link rel="stylesheet" th:href="@{/assets/stylesheets/theme-custom.css}">
+
+    <!-- Head Libs -->
+    <script src="assets/vendor/modernizr/modernizr.js" type="text/javascript"></script>
+</head>
+<body class="body">
+<header class="header" th:replace="template :: header"></header>
+
+<div class="inner-wrapper">
+    <aside id="sidebar-left" class="sidebar-left" th:replace="template :: sidebar"></aside>
+    <section role="main" class="content-body">
+        <header class="page-header">
+
+            <div class="right-wrapper pull-right">
+                <ol class="breadcrumbs">
+                    <li>
+                        <a href="index.html">
+                            <i class="fa fa-home"></i>
+                        </a>
+                    </li>
+                    <li><span>Add / Edit Clients</span></li>
+                    <li><span>Section</span></li>
+                </ol>
+                <a class="sidebar-right-toggle" data-open="sidebar-right"><i class="fa fa-chevron-left"></i></a>
+            </div>
+        </header>
+        <!-- start: page -->
+        <section class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions">
+                    <a href="#" class="fa fa-caret-down"></a>
+                    <a href="#" class="fa fa-times"></a>
+                </div>
+
+                <h2 class="panel-title">Default</h2>
+            </header>
+            <div class="panel-body" id ="main-panel">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="mb-md">
+                        <a th:action="@{/clients}" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" >Add <i class="fa fa-plus"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="mb-md">
+                            <p class="text-center  text-uppercase validation-message" th:utext="${confirmationMessage}"></p>
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-bordered table-striped mb-none" id="datatable-editable">
+                    <thead>
+                    <tr>
+                        <th>Number</th>
+                        <th>Name</th>
+                        <th>Reg-Date</th>
+                        <th>Mail</th>
+                        <th>Cif</th>
+                        <th>Adress</th>
+                        <th>ContactPerson</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <tr class="gradeX" method="GET" th:each="client, iteratSts : ${clients}" >
+
+                            <td th:text="${iteratSts.index}+1" class="number"></td>
+                            <td th:text="${client.getName()}" th:id="name + (${iteratSts.index}+1)"></td>
+                            <td th:text="${client.getRegDate()}" th:id="date + (${iteratSts.index}+1)" ></td>
+                            <td th:text="${client.getMail()}" th:id="mail +(${iteratSts.index}+1)"></td>
+                            <td th:text="${client.getCif()}" th:id="cif +(${iteratSts.index}+1)"></td>
+                            <td th:text="${client.getAdress()}" th:id="adress +(${iteratSts.index}+1)"></td>
+                            <td th:text="${client.getContactPerson()}" th:id="contact + (${iteratSts.index}+1)"></td>
+
+                        <td class="actions">
+
+                            <a href="#" th:href="@{/clients/{id}/edit(id=${client.id})}"><i class="fa fa-pencil"></i></a>
+                            <!--<a th:href="@{/clients/{id}/delete(id=${client.id})}"><i class="fa fa-pencil"></i></a>-->
+                            <a href="#" class="on-default remove-row"><i class="fa fa-trash-o"></i></a>
+
+                            <!--Modal Box-->
+
+                            <div id="dialog" class="modal-block mfp-hide" >
+                                <form th:action="@{/clients/{id}/delete(id=${client.id})}" th:method="delete">
+                                <section class="panel">
+                                    <header class="panel-heading">
+                                        <h2 class="panel-title">Delete client</h2>
+                                    </header>
+                                    <div class="panel-body">
+                                        <div class="modal-wrapper">
+                                            <div class="modal-text">
+                                                <p>Are you sure that you want to delete client ?</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <footer class="panel-footer">
+                                        <div class="row">
+                                            <div class="col-md-12 text-right">
+                                                <a th:href="@{/clients/{id}/delete(id=${client.id})}"  class="btn btn-primary" >Delete</a>
+                                                <button type="submit" class="btn btn-default">Delete</button>
+                                                <button id="dialogCancel" class="btn btn-default">Cancel</button>
+                                            </div>
+                                        </div>
+                                    </footer>
+                                </section>
+                                </form>
+                            </div>
+
+
+                        </td>
+                    </tr>
+                    <!--</form>-->
+
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <!-- end: page -->
+    </section>
+</div>
+
+<div class="modal fade" id="exampleModal" >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-top">
+                <h5 class="panel-modal-top" >Add New Client</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modals-middle" >
+                <form th:name="clientAdd" th:action="@{/clients}" th:object="${client}" th:method="post" onsubmit="return validationClient();">
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Name :</label>
+                        <input th:field="*{name}" type="text" class="form-control" id="recipient-name" name="recipient-name" >
+                        <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error-message" id="name-verification"></span>
+                        <p class="error-message" id="validation-name"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-mail" class="col-form-label">Mail :</label>
+                        <input th:field="*{mail}" type="text" class="form-control" id="recipient-mail">
+                        <p class="error-message" id="validation-mail"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-cif" class="col-form-label">Cif:</label>
+                        <input th:field="*{cif}" type="number" class="form-control" id="recipient-cif" >
+                        <span th:if="${#fields.hasErrors('cif')}" th:errors="*{cif}" class="error-message" id="cif-verification"></span>
+                        <p class="error-message" id="validation-cif"></p>
+                    </div>
+                    <div class="form-group" >
+                        <label for="mydate" class="col-form-label">Calendar date:</label>
+                        <div style="position:relative" class="myDatePickers">
+                            <input th:field="*{regDate}" id="mydate"  type="text" class="form-control time" data-date-format="dd-mm-yyyy" placeholder="Select a Date" >
+                            <!--<span class="glyphicon glyphicon-calendar customCalendar"></span>-->
+                            <p class="error-message" id="validation-date"></p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-adress" class="col-form-label">Adress :</label>
+                        <input th:field="*{adress}" type="text" class="form-control" id="recipient-adress">
+                        <p class="error-message" id="validation-adress"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-contact" class="col-form-label">Contact Person :</label>
+                        <input th:field="*{contactPerson}" type="text" class="form-control" id="recipient-contact">
+                        <p class="error-message" id="validation-contact"></p>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Save client</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Vendor -->
+<div th:include="template :: javascript-botom"></div>
+
+<!-- Examples -->
+<script src="assets/javascripts/forms/modals.js"></script>
+<script src="assets/javascripts/forms/validateClient.js"></script>
+<script src="assets/javascripts/tables/examples.datatables.editable.js"></script>
+</body>
+</html>

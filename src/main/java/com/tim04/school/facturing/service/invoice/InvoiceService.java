@@ -21,6 +21,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -82,15 +83,18 @@ public class InvoiceService {
     public void generateClientFolder(String path) {
         List<Client> clientList = clientService.findAllClientsByUser();
         Path locationPath = Paths.get(path);
-        if (Files.isDirectory(locationPath)) {
-            System.out.println(Files.isDirectory(locationPath));
-            File file = new File(path);
-            generateBackupFolders(clientList, file, path);
-        } else {
-            File makeFolder = new File(path);
-            makeFolder.mkdir();
-            generateBackupFolders(clientList, makeFolder, path);
+        if (clientList != null) {
+            if (Files.isDirectory(locationPath)) {
+                System.out.println(Files.isDirectory(locationPath));
+                File file = new File(path);
+                generateBackupFolders(clientList, file, path);
+            } else {
+                File makeFolder = new File(path);
+                makeFolder.mkdir();
+                generateBackupFolders(clientList, makeFolder, path);
+            }
         }
+
     }
 
     public void generateBackupFolders(List<Client> clientList, File file, String path) {
@@ -108,8 +112,8 @@ public class InvoiceService {
                 newFile.mkdir();
             }
         }
-    }
 
+    }
 
     public void savePathUser(User user) {
         User loggedUser = userService.findLogged();
@@ -118,25 +122,25 @@ public class InvoiceService {
         userService.save(loggedUser);
     }
 
-    /* public String generateReport(String path, Invoice invoice,String clientName) { */
-    public String generateReport(String path, Invoice invoice, String clientName) {
+    public String generateReport(Invoice invoice) {
         try {
             Supplier theSupplier = supplierService.getTheSupplier();
             Client client = invoice.getClient();
-            Map<String, Object> supplierMap = supplierService.supplierMap(invoice);
-            Map<String, Object> clientMap = clientService.clientMap(invoice);
-            Map<String, Object> invoiceMap = invoiceService.invoiceMap(invoice);
+            User loggedUser = theSupplier.getUser();
+            String path = loggedUser.getDefaultPath();
 
+            Map<String, Object> invoiceItems = new HashMap<>();
+
+            Map<String, Object> clientMap = clientService.clientMap(invoice, invoiceItems);
+            Map<String, Object> invoiceMap = invoiceService.invoiceMap(invoice, invoiceItems);
+            Map<String, Object> supplierMap = supplierService.supplierMap(invoice, invoiceItems);
 
             // Add parameters
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("createdBy", "Websparrow.org");
             List<Map<String, Object>> objects = new ArrayList<>();
-            objects.add(supplierMap);
-            objects.add(supplierMap);
-            objects.add(clientMap);
+            objects.add(invoiceItems);
 
-            String thePath = path;
             // Compile the Jasper report from .jrxml to .japser
             InputStream stream = this.getClass().getResourceAsStream("/MainInvoice.jrxml");
             JasperReport jasperReport = JasperCompileManager.compileReport(stream);
@@ -145,33 +149,45 @@ public class InvoiceService {
             JRBeanCollectionDataSource jrBeanCollectionDataSource = new JRBeanCollectionDataSource(objects, false);
             // Fill the report
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, jrBeanCollectionDataSource);
+            generateClientFolder(path);
+            deletePossibleFile(path,invoice.getClientName(),getCurrentDate());
             // Export the report to a PDF file
-            JasperExportManager.exportReportToPdfFile(jasperPrint, thePath + "\\" + invoice.getClientName());
-            System.out.println("Done");
-            return "Report successfully generated @path= " + thePath;
+            /*JasperExportManager.exportReportToPdfFile(jasperPrint, path + "\\" + invoice.getClientName()+ " "+ getCurrentDate());*/
+            JasperExportManager.exportReportToPdfFile(jasperPrint, path + "\\" + invoice.getClientName() + " " + getCurrentDate() + ".pdf");
+
+            return "Report successfully generated @path= " + path;
         } catch (Exception e) {
             e.printStackTrace();
             return "Error--> check the console log";
         }
     }
 
-    public String getCurrentMonth() {
-        String[] lunileAnului = {"Ianuarie", "Februarie", "Martie", "Aprilie", "Mai", "Iunie", "Iulie", "August", "Septembrie", "Octombrie", "Noiembrie", "Decembrie"};
+    public String getCurrentDate() {
+        String[] lunileAnului = {"Ianuarie ", "Februarie ", "Martie ", "Aprilie ", "Mai ", "Iunie ", "Iulie ", "August ", "Septembrie ", "Octombrie ", "Noiembrie ", "Decembrie "};
         LocalDate currentDate = LocalDate.now();
         int month = currentDate.getMonthValue();
-        return lunileAnului[month - 1];
+        int year = currentDate.getYear();
+        return lunileAnului[month - 1] + year;
+    }
+    public void deletePossibleFile(String path, String clientName, String currentDate){
+      String allPath = path+clientName + currentDate+".pdf";
+      File file = new File(allPath);
+          if(file.isFile()){
+            file.delete();
+          }
     }
 
-
-    public Map<String, Object> invoiceMap(Invoice invoice) {
-        Map<String, Object> invoiceItems = new HashMap<>();
+    public Map<String, Object> invoiceMap(Invoice invoice, Map<String, Object> invoiceItems) {
         Optional<Invoice> optionalInvoice = invoiceRepository.findInvoiceByinvoiceSeries(invoice.getInvoiceSeries());
-        if(optionalInvoice.isPresent()){
-            invoiceItems.put("InvoiceID", invoice.getInvoiceID());
+        if (optionalInvoice.isPresent()) {
+            invoiceItems.put("invoiceID", invoice.getId());
             invoiceItems.put("services", invoice.getServices());
-            invoiceItems.put("price", invoice.getTotalPrice());
-            invoiceItems.put("quantity", invoice.getPieces());
             invoiceItems.put("unityMeasure", invoice.getUnityMeasure());
+            invoiceItems.put("pieces", invoice.getPieces());
+            invoiceItems.put("unitPrice", invoice.getUnitPrice());
+            invoiceItems.put("totalPrice", invoice.getSum());
+            invoiceItems.put("printDate", invoice.getPrintDate());
+            invoiceItems.put("invoiceSeries", invoice.getInvoiceSeries());
         }
         return invoiceItems;
     }
@@ -190,6 +206,7 @@ public class InvoiceService {
         if (!getAllInvoices.isPresent()) return Optional.empty();
         return getAllInvoices;
     }
+
     public Optional<Invoice> getInvoiceSeries(Integer seriesId) {
         Optional<Invoice> optionalInvoice = invoiceRepository.findInvoiceByinvoiceSeries(seriesId);
         if (!optionalInvoice.isPresent()) return Optional.empty();
@@ -201,4 +218,24 @@ public class InvoiceService {
         return distinctClients;
     }
 
+    public Optional<Invoice> findById(Long id) {
+        Optional<Invoice> optionalInvoice = invoiceRepository.findById(id);
+        if (optionalInvoice.isPresent()) return optionalInvoice;
+        return Optional.empty();
+    }
+
+    @Transactional
+    public void deleteInvoice(Invoice invoice) {
+        try {
+            invoiceRepository.delete(invoice);
+        } catch (NullPointerException e) {
+            System.out.print("There is no invoice available to be deleted !");
+        }
+    }
+    public void updateInvoice(Invoice invoice){
+        Optional<Invoice> optionalInvoice = invoiceRepository.findById(invoice.getId());
+        Invoice findInvoice = optionalInvoice.get();
+        findInvoice = invoice;
+        invoiceRepository.save(findInvoice);
+    }
 }

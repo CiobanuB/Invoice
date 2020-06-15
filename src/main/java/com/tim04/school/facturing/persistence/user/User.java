@@ -1,9 +1,9 @@
 package com.tim04.school.facturing.persistence.user;
 
-import com.tim04.school.facturing.persistence.Role.Roles;
+import com.tim04.school.facturing.persistence.role.Roles;
 import com.tim04.school.facturing.persistence.supplier.Supplier;
-import com.tim04.school.facturing.persistence.user.MailProperties.MailProperties;
-import com.tim04.school.facturing.persistence.user.VerificationToken.VerificationToken;
+import com.tim04.school.facturing.persistence.user.mailProperties.MailProperties;
+import com.tim04.school.facturing.persistence.user.verificationToken.VerificationToken;
 
 import javax.persistence.*;
 import java.util.ArrayList;

@@ -56,17 +56,6 @@ public class SupplierService {
         supplierRepository.save(findSupplier);
     }
 
-
-
-  /*  public Optional<Supplier> getTheSupplier()
-    {
-        User user = userService.findLogged();
-        Optional<Supplier> optional = supplierRepository.findSupplierByUser(user);
-        if(optional.isPresent()) return optional;
-        else return optional.empty();
-
-    }*/
-
     public Supplier getTheSupplier()
     {
         User user = userService.findLogged();
@@ -81,11 +70,11 @@ public class SupplierService {
         return supplier;
     }
 
-    public Map<String, Object> supplierMap(Invoice invoice) {
-        Map<String,Object> supplierItems = new HashMap<>();
+    public Map<String, Object> supplierMap(Invoice invoice,Map<String,Object> supplierItems) {
         Optional<Invoice> optionalInvoice = invoiceService.getInvoiceSeries(invoice.getInvoiceSeries());
         Invoice findInvoice = optionalInvoice.get();
         Supplier supplier = findInvoice.getSupplier();
+        User loggedUser = userService.findLogged();
         if(optionalInvoice.isPresent()) {
             supplierItems.put("name", supplier.getName());
             supplierItems.put("regDate", supplier.getRegDate());
@@ -94,6 +83,7 @@ public class SupplierService {
             supplierItems.put("adress", supplier.getAdress());
             supplierItems.put("bankAccount", supplier.getBankAccount());
             supplierItems.put("website", supplier.getWebsite());
+            supplierItems.put("firstName", loggedUser.getFirstName());
         }
         return supplierItems;
     }

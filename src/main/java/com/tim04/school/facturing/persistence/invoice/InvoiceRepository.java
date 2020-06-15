@@ -13,6 +13,7 @@ import java.util.Optional;
 @Repository
 public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     Optional<Invoice> findInvoiceByinvoiceSeries(Integer series);
+    Optional<Invoice> findInvoiceById(Long id);
    Invoice findInvoiceByClientName(String clientName);
 
    @Query("SELECT DISTINCT a FROM Invoice a")

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html class="fixed" lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- Specific Page Vendor CSS -->
+    <link rel="stylesheet" href="assets/vendor/select2/select2.css"/>
+    <link rel="stylesheet" href="assets/vendor/jquery-datatables-bs3/assets/css/datatables.css"/>
+
+    <!--&lt;!&ndash; BootStrap http javascript &ndash;&gt;
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>-->
+
+
+</head>
+<head th:include="template :: head"></head>
+<body class="body">
+<header class="header" th:replace="template :: header"></header>
+
+<div class="inner-wrapper" >
+    <aside id="sidebar-left" class="sidebar-left" th:replace="template :: sidebar"></aside>
+    <section role="main" class="content-body" >
+        <header class="page-header" >
+            <h2>Invoice</h2>
+            <div class="right-wrapper pull-right">
+                <ol class="breadcrumbs">
+                    <li>
+                        <a href="index.html">
+                            <i class="fa fa-home"></i>
+                        </a>
+                    </li>
+                    <li><span>Invoice</span></li>
+                    <li><span>Section</span></li>
+                </ol>
+                <a class="sidebar-right-toggle" data-open="sidebar-right"><i class="fa fa-chevron-left"></i></a>
+            </div>
+        </header>
+        <!-- start: page -->
+        <section class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions">
+                    <a href="#" class="fa fa-caret-down"></a>
+                    <a href="#" class="fa fa-times"></a>
+                </div>
+
+                <h4 class="panel-title">Set default folder</h4>
+            </header>
+            <div class="panel-body">
+                <div class="row">
+                    <form th:action = "@{/Invoice/addPath}" th:object="${user}" method="post" onsubmit="return validateFolder();">
+                        <p  class="panel-title margins">Please insert your default path ( Full path required ) :</p>
+
+                            <div class="col-sm-8">
+                                <div class="mb-md">
+                                    <input type="text"  th:field="*{defaultPath}" class="text-center col-md-4 margins " id="getPath" >
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="mb-md">
+                                    <span th:if="${#fields.hasErrors('defaultPath')}" th:errors="*{defaultPath}" class="error-message-17"  th:utext="${pathValidation}"></span>
+                                    <p class="error-message-17" id="path-verification"></p>
+                                </div>
+                            </div>
+                        <button type="submit" class="margins btn btn-primary">Save</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+            <div class="panel-body" id ="main-panel">
+                <div class="row">
+                <div class="col-sm-3">
+                    <div class="mb-md">
+                        <a th:action="@{/Invoice/addInvoice}" class="btn btn-primary" data-toggle="modal" data-target="#addInvoiceModal" >Add <i class="fa fa-plus"></i></a>
+                    </div>
+                </div>
+                <div class="col-sm-9">
+                    <div class="mb-md">
+                        <p class="text-center  text-uppercase validation-message" th:utext="${confirmationMessage}"></p>
+                    </div>
+                </div>
+            </div>
+                <table class="table table-bordered table-striped mb-none" id="datatable-editable">
+                    <thead>
+                    <tr>
+                        <th>Number</th>
+                        <th>Client Name</th>
+                        <th>Last Invoice</th>
+                        <th>Series</th>
+                        <th>Service Name</th>
+                        <th>Sum</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <tr class="gradeX" method="GET" th:each="invoice, iteratSts : ${invoiceList}"  >
+
+                            <td th:text="${iteratSts.index }+1" class="number"></td>
+                            <td th:text="${invoice.getClientName()}" th:id="name + (${iteratSts.index}+1)"></td>
+                            <td th:text="${invoice.getPrintDate()}" th:id="date + (${iteratSts.index}+1)" ></td>
+                            <td th:text="${invoice.getInvoiceSeries()}" th:id="mail +(${iteratSts.index}+1)"></td>
+                            <td th:text="${invoice.getServices()}" th:id="cif +(${iteratSts.index}+1)"></td>
+                            <td th:text="${invoice.getSum()}" th:id="adress +(${iteratSts.index}+1)"></td>
+
+                            <td class="actions">
+                                <a th:href="@{/Invoice/{id}/generateInvoice(id=${invoice.id})}"  ><i class="fa fa-pencil"></i> </a>
+                                <a th:href="@{/Invoice/{id}/Send-invoice(id=${invoice.id})}"  ><i class="fa fa-paper-plane"></i> </a>
+                                <a href="#" class="on-default remove-row"><i class="fa fa-trash-o"></i></a>
+
+                                <div id="dialog" class="modal-block mfp-hide">
+                                    <section class="panel">
+                                        <header class="panel-heading">
+                                            <h2 class="panel-title">Are you sure?</h2>
+                                        </header>
+                                        <div class="panel-body">
+                                            <div class="modal-wrapper">
+                                                <div class="modal-text">
+                                                    <p>Are you sure that you want to delete this row?</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <footer class="panel-footer">
+                                            <div class="row">
+                                                <div class="col-md-12 text-right">
+                                                    <!--<button id="dialogConfirm" class="btn btn-primary">Confirm</button>-->
+                                                    <a th:href="@{/Invoice/{id}/delete(id=${invoice.id})}"  class="btn btn-primary" >Delete</a>
+                                                    <button id="dialogCancel" class="btn btn-default">Cancel</button>
+                                                </div>
+                                            </div>
+                                        </footer>
+                                    </section>
+                                </div>
+                            </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+        <!-- end: page -->
+    </section>
+</div>
+
+<div class="modal fade" id="addInvoiceModal" >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-top">
+                <h5 class="panel-modal-top" >Add New Invoice</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modals-middle" >
+                <form  th:action="@{/Invoice/addInvoice}" th:object="${invoice}" th:method="post" onsubmit="return validateInvoice();" >
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Client :</label>
+                        <div class="col-sm-9">
+                            <select th:field="*{clientName}" name="clients" title="Please select least one client" class="form-control" size="5" id="clientNameInvoice" >
+                                <option  th:each="client : ${clientList}" th:value="${client.name}"  th:text="${client.name}"></option>
+                            </select>
+                            <p class="error-message" id="validation-nameInvoice"></p>
+                        </div>
+                    </div>
+                    <div class="form-group" >
+                        <label for="dateInvoice" class="col-form-label">Date:</label>
+                        <div style="position:relative" class="myDatePickers">
+                            <input th:field="*{printDate}"   type="text" class="form-control time" data-date-format="dd-mm-yyyy" placeholder="Select a Date" id="dateInvoice" >
+                            <p class="error-message" id="validation-dateInvoice"></p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="invoiceSeriesInvoice" class="col-form-label">Invoice Series:</label>
+                        <input th:field="*{invoiceSeries}" type="text" class="form-control" id="invoiceSeriesInvoice" >
+                        <p class="error-message" id="validation-invoiceSeries"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="serviceNameInvoice" class="col-form-label">Service name :</label>
+                        <input th:field="*{services}" type="text" class="form-control" id="serviceNameInvoice" >
+                        <p class="error-message" id="validation-serviceName"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="piecesInvoice" class="col-form-label">Pieces :</label>
+                        <input th:field="*{pieces}" type="text" class="form-control" id="piecesInvoice" >
+                        <p class="error-message" id="validation-pieces"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="unitMeasureInvoice" class="col-form-label">Unit Measure :</label>
+                        <input th:field="*{unityMeasure}" type="text" class="form-control" id="unitMeasureInvoice" >
+                        <p class="error-message" id="validation-unitMeasure"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="unitPriceInvoice" class="col-form-label">Unit Price :</label>
+                        <input th:field="*{unitPrice}" type="text" class="form-control" id="unitPriceInvoice" >
+                        <p class="error-message" id="validation-unitPrice"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="sumInvoice" class="col-form-label">Sum :</label>
+                        <input th:field="*{sum}" type="text" class="form-control" id="sumInvoice" >
+                        <p class="error-message" id="validation-sumInvoice"></p>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Save invoice</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Vendor -->
+<div th:include="template :: javascript-botom"></div>
+
+
+<!-- Examples -->
+<script src="assets/javascripts/forms/modals.js"></script>
+<script src="assets/javascripts/forms/validateInvoicePage.js"></script>
+<script src="assets/javascripts/tables/examples.datatables.editableInvoice.js"></script>
+
+</body>
+</html>

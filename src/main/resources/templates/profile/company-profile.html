@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html class="fixed" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head th:include="template :: head">
+</head>
+<head><title> User Profile Page</title>
+    <meta name="keywords" content="HTML5 Admin Template"/>
+    <meta name="description" content="Porto Admin - Responsive HTML5 Template">
+    <meta name="author" content="okler.net">
+</head>
+<body class="body">
+<header class="header" th:replace="template :: header"></header>
+
+<div class="inner-wrapper">
+    <aside id="sidebar-left" class="sidebar-left" th:replace="template :: sidebar"></aside>
+    <section role="main" class="content-body">
+        <header class="page-header">
+            <h2>Edit / User Profile</h2>
+            <div class="right-wrapper pull-right">
+                <ol class="breadcrumbs">
+                    <li>
+                        <a href="index.html">
+                            <i class="fa fa-home"></i>
+                        </a>
+                    </li>
+                    <li><span>Edit / User Profile</span></li>
+                    <li><span>Section</span></li>
+                </ol>
+                <a class="sidebar-right-toggle" data-open="sidebar-right"><i class="fa fa-chevron-left"></i></a>
+            </div>
+        </header>
+
+    <!-- start: page -->
+        <section class="panel">
+            <header class="panel-warning">
+                <div class="panel-actions">
+                    <a href="#" class="fa fa-caret-down"></a>
+                    <a href="#" class="fa fa-times"></a>
+                </div>
+            </header>
+        </section>
+        <div class="col-lg-12">
+            <section class="panel">
+                <header class="panel-heading">
+                    <h2 class="panel-title text-center">Complete your company Profile</h2>
+                    <div class="panel-actions">
+                        <a href="#" class="fa fa-caret-down"></a>
+                        <a href="#" class="fa fa-times"></a>
+                    </div>
+                </header>
+                <div class="panel-body">
+                    <form class="form-horizontal form-bordered" th:action="@{/company-profile/supplierForm}" th:object="${supplier}"  method="post" onsubmit="return validation();" >
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" >Company name</label>
+                            <div class="col-md-6">
+                                <input th:field="*{name}" type="text" class="form-control" placeholder="Company name" id = "companyName"/>
+                                <p class="error-message" id="validation-name"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" >Company CIF</label>
+                            <div class="col-md-6">
+                                <input th:field="*{cifSupplier}" type="number" class="form-control" placeholder="Company Cif"  id="companyCif" />
+                                <span th:if="${#fields.hasErrors('cifSupplier')}" th:errors="*{cifSupplier}" class="error-message"></span>
+                                <p class="error-message" id="validation-cif"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" >Company Mail</label>
+                            <div class="col-md-6">
+                                <input th:field="*{mail}" type="text" class="form-control" placeholder="Company Cif"  id="mail" />
+                                <p class="error-message" id="validation-mail"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" >Company Reg. Date</label>
+                            <div class="col-md-6">
+                                <input th:field="*{regDate}" type="text" class="form-control" placeholder="Reg. Date" data-date-format="dd/mm/yyyy" id="regDate"/>
+                                <p class="error-message" id="validation-date"></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" >Adress</label>
+                            <div class="col-md-6">
+                                <input th:field="*{adress}" type="text" class="form-control" placeholder="Adress" id="adress"   />
+                                <p  class="error-message" id="validation-adress"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" >Website</label>
+                            <div class="col-md-6">
+                                <input th:field="*{website}" type="text" class="form-control" placeholder="Company website" id="website"  >
+                                <p class="error-message" id="validation-website"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" >Bank Account</label>
+                            <div class="col-md-6">
+                                <input th:field="*{bankAccount}" type="text" class="form-control" placeholder="Bank Account" id="bankAccount"  >
+                                <p class="error-message" id="validation-bank"></p>
+                            </div>
+                        </div>
+                        <p class="text-center  text-uppercase text-success success-message" th:utext="${successMessage}"></p>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" ></label>
+                            <div class="col-md-6 col-md-offset-2">
+                                <button type="submit" class="btn btn-primary">Save</button>
+                                <button type="reset" class="btn btn-default">Reset</button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </section>
+        </div>
+    </div>
+    <!-- end: page -->
+    </section>
+</div>
+
+<div th:include="template :: javascript-botom"></div>
+<script src="assets/javascripts/forms/customValidationCompany.js"></script>
+</body>
+</html>

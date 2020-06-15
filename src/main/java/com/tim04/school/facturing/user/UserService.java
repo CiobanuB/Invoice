@@ -1,7 +1,6 @@
 package com.tim04.school.facturing.user;
 
-import com.tim04.school.facturing.persistence.Role.Roles;
-import com.tim04.school.facturing.persistence.client.Client;
+import com.tim04.school.facturing.persistence.role.Roles;
 import com.tim04.school.facturing.persistence.user.User;
 import com.tim04.school.facturing.persistence.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Optional;
 
 @Service

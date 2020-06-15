@@ -175,9 +175,9 @@ a:active {
 	}
 
 	/* Layout Fixed - Inner Wrapper */
-	html.fixed .inner-wrapper {
+	/*html.fixed .inner-wrapper {
 		padding-top: 110px;
-	}
+	}*/
 
 	/* Layout Fixed - Content Body */
 	html.fixed .content-body {
