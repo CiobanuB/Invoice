@@ -12,19 +12,30 @@ import java.util.Optional;
 
 @Repository
 public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
-    Optional<Invoice> findInvoiceByinvoiceSeries(Integer series);
+    Optional<Invoice> findInvoiceByinvoiceSeries(String series);
+
     Optional<Invoice> findInvoiceById(Long id);
-   Invoice findInvoiceByClientName(String clientName);
 
-   @Query("SELECT DISTINCT a FROM Invoice a")
-   List<Invoice> findDistinctClientsss();
-  @Query("SELECT a FROM Invoice a WHERE (a.printDate,a.clientName) IN ( SELECT MAX(x.printDate),x.clientName FROM Invoice x GROUP BY x.client)")
-  List<Invoice> findDistinctClients();
-  @Query(" SELECT MAX(x.printDate) FROM Invoice x GROUP BY x.clientName")
-  List<String> findDistinctOnes();
-  Optional<List<Invoice>> findAllBySupplier(Supplier supplier);
+    Invoice findInvoiceByClientName(String clientName);
+
+    List<Invoice> findAll();
 
 
+    @Query("SELECT a FROM Invoice a WHERE a.printDate = ( SELECT MAX(x.printDate) FROM Invoice x WHERE a.clientName = x.clientName AND a.supplier = :theSupplier)")
+    List<Invoice> findDistinctClients(@Param("theSupplier") Supplier supplier);
+
+    @Query("SELECT COUNT(a.printDate) FROM Invoice a WHERE  EXTRACT(YEAR FROM a.printDate)  = YEAR(NOW())  AND EXTRACT(MONTH FROM a.printDate)  = MONTH(NOW()) AND a.supplier = :theSupplier")
+    Integer distinctNumberInvoicesCurrentMonthAndYear(@Param("theSupplier") Supplier supplier);
+
+    @Query("SELECT COUNT(a.printDate) FROM Invoice a WHERE EXTRACT(YEAR FROM a.printDate)  = YEAR(NOW()) AND a.supplier = :theSupplier")
+    Integer distinctNumberInvoicesCurrentYear(@Param("theSupplier") Supplier supplier);
 
 
+    @Query("SELECT  COUNT(DISTINCT x.clientName) FROM Invoice x where x.supplier= :theSupplier ")
+    Integer distinctClients(@Param("theSupplier") Supplier supplier);
+
+    Optional<List<Invoice>> findAllBySupplier(Supplier supplier);
+
+
+    Integer countIdBySupplier(Supplier supplier);
 }

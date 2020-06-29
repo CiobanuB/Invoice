@@ -66,6 +66,7 @@ public class InvoiceService {
         Optional<Client> optionalClient = clientService.findClientByName(invoice.getClientName());
         Client client = optionalClient.get();
         if (optionalClient.isPresent()) invoice.setClient(client);
+        invoice.setInvoiceSeries();
         invoice.setSupplier(supplier);
         invoiceRepository.save(invoice);
     }
@@ -150,10 +151,10 @@ public class InvoiceService {
             // Fill the report
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, jrBeanCollectionDataSource);
             generateClientFolder(path);
-            deletePossibleFile(path,invoice.getClientName(),getCurrentDate());
+            deletePossibleFile(path, invoice.getClientName(), getCurrentDate());
             // Export the report to a PDF file
             /*JasperExportManager.exportReportToPdfFile(jasperPrint, path + "\\" + invoice.getClientName()+ " "+ getCurrentDate());*/
-            JasperExportManager.exportReportToPdfFile(jasperPrint, path + "\\" + invoice.getClientName() + " " + getCurrentDate() + ".pdf");
+            JasperExportManager.exportReportToPdfFile(jasperPrint, path + "\\" + invoice.getClientName() + "\\" + invoice.getClientName() + " " + getCurrentDate() + ".pdf");
 
             return "Report successfully generated @path= " + path;
         } catch (Exception e) {
@@ -169,12 +170,18 @@ public class InvoiceService {
         int year = currentDate.getYear();
         return lunileAnului[month - 1] + year;
     }
-    public void deletePossibleFile(String path, String clientName, String currentDate){
-      String allPath = path+clientName + currentDate+".pdf";
-      File file = new File(allPath);
-          if(file.isFile()){
+    public Integer currentYear(){
+        LocalDate currentDate = LocalDate.now();
+        int year = currentDate.getYear();
+        return year;
+    }
+
+    public void deletePossibleFile(String path, String clientName, String currentDate) {
+        String allPath = path + clientName + currentDate + ".pdf";
+        File file = new File(allPath);
+        if (file.isFile()) {
             file.delete();
-          }
+        }
     }
 
     public Map<String, Object> invoiceMap(Invoice invoice, Map<String, Object> invoiceItems) {
@@ -188,14 +195,14 @@ public class InvoiceService {
             invoiceItems.put("totalPrice", invoice.getSum());
             invoiceItems.put("printDate", invoice.getPrintDate());
             invoiceItems.put("invoiceSeries", invoice.getInvoiceSeries());
+            System.out.println(invoice.getInvoiceSeries());
         }
         return invoiceItems;
     }
 
-    @Transactional(readOnly = true)
     public List<Invoice> getListInvoice() {
-        List<String> clients = invoiceRepository.findDistinctOnes();
-        List<Invoice> getList = invoiceRepository.findDistinctClients();
+        Supplier supplier = supplierService.getTheSupplier();
+        List<Invoice> getList = invoiceRepository.findDistinctClients(supplier);
 
         return getList;
     }
@@ -207,14 +214,29 @@ public class InvoiceService {
         return getAllInvoices;
     }
 
-    public Optional<Invoice> getInvoiceSeries(Integer seriesId) {
+    public Optional<Invoice> getInvoiceSeries(String seriesId) {
         Optional<Invoice> optionalInvoice = invoiceRepository.findInvoiceByinvoiceSeries(seriesId);
         if (!optionalInvoice.isPresent()) return Optional.empty();
         return optionalInvoice;
     }
 
-    public List<Invoice> distinctInvoices() {
-        List<Invoice> distinctClients = invoiceRepository.findDistinctClients();
+ /*   public List<Invoice> distinctInvoices() {
+        Supplier supplier = supplierService.getTheSupplier();
+        List<Invoice> distinctClients = invoiceRepository.findDistinctClients(supplier);
+        return distinctClients;
+    }*/
+
+    public Integer numberInvoiced() {
+        Supplier supplier = supplierService.getTheSupplier();
+        Integer invoiceDistinctDates = invoiceRepository.distinctNumberInvoicesCurrentMonthAndYear(supplier);
+       /* Integer distinctClients = invoiceRepository.distinctClients(supplier);
+        Integer numberToBeInvoiced = distinctClients - invoiceDistinctDates;*/
+        return invoiceDistinctDates;
+    }
+
+    public Integer clientNumbers() {
+        Supplier supplier = supplierService.getTheSupplier();
+        Integer distinctClients = invoiceRepository.distinctClients(supplier);
         return distinctClients;
     }
 
@@ -232,10 +254,26 @@ public class InvoiceService {
             System.out.print("There is no invoice available to be deleted !");
         }
     }
-    public void updateInvoice(Invoice invoice){
+
+    public void updateInvoice(Invoice invoice) {
         Optional<Invoice> optionalInvoice = invoiceRepository.findById(invoice.getId());
         Invoice findInvoice = optionalInvoice.get();
         findInvoice = invoice;
         invoiceRepository.save(findInvoice);
     }
+    public Map<String,Object> statisticsItems(){
+        Map<String,Object> items = new HashMap<String,Object>();
+        Supplier supplier = supplierService.getTheSupplier();
+        Integer distinctClients = invoiceRepository.distinctClients(supplier);
+        items.put("Number Clientss",distinctClients);
+        Integer invoiceDistinctCurrentMonth = invoiceRepository.distinctNumberInvoicesCurrentMonthAndYear(supplier);
+        items.put("Invoiced Current Month",invoiceDistinctCurrentMonth);
+        Integer totalInvoices = invoiceRepository.countIdBySupplier(supplier);
+        items.put("Total number of invoices",totalInvoices);
+        Integer invoicesCurrentYear = invoiceRepository.distinctNumberInvoicesCurrentYear(supplier);
+        items.put("Invoiced in year " + currentYear(),invoicesCurrentYear);
+
+        return items;
+    }
+
 }

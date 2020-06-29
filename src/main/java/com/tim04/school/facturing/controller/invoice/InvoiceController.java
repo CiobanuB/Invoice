@@ -9,13 +9,16 @@ import com.tim04.school.facturing.service.invoice.InvoiceService;
 import com.tim04.school.facturing.service.supplier.SupplierService;
 import com.tim04.school.facturing.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
@@ -30,12 +33,20 @@ public class InvoiceController {
     @Autowired
     private SupplierService supplierService;
 
+    @InitBinder
+    public void initBinder ( WebDataBinder binder )
+    {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        dateFormat.setLenient(false);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+    }
     @GetMapping
     public ModelAndView invoice() {
         ModelAndView modelAndView = new ModelAndView();
         Supplier findSupplier = supplierService.getTheSupplier();
         User user = userService.findLogged();
-        List<Invoice> invoiceList = invoiceService.distinctInvoices();
+        //List<Invoice> invoiceList = invoiceService.distinctInvoices();
+        List<Invoice> invoiceList = invoiceService.getListInvoice();
 
         if (findSupplier == null) {
             modelAndView.addObject("clientsList", new ArrayList<>());
@@ -73,6 +84,7 @@ public class InvoiceController {
     @PostMapping(value = "/addInvoice")
     public ModelAndView savePath(@ModelAttribute("invoice") Invoice invoice, BindingResult bindingResult, RedirectAttributes redirectAttributes) throws ParseException {
         ModelAndView modelAndView = new ModelAndView();
+        User user = userService.findLogged();
 
         if (bindingResult.hasErrors()) {
             modelAndView.addObject("confirmationMessage", "We could not add the invoice");
@@ -80,6 +92,7 @@ public class InvoiceController {
         } else {
             invoiceService.save(invoice);
             redirectAttributes.addAttribute("invoice", new Invoice());
+            redirectAttributes.addAttribute("user", user);
             redirectAttributes.addFlashAttribute("confirmationMessage", "Invoice has been added!");
             modelAndView.setViewName("redirect:/Invoice");
         }
@@ -144,6 +157,7 @@ public class InvoiceController {
         }
         return modelAndView;
     }
+
 
 
 }

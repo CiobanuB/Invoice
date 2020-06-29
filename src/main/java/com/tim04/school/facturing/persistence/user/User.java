@@ -36,7 +36,7 @@ public class User {
     private Boolean isActive;
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true)
     private VerificationToken verificationToken;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user",orphanRemoval = true)
     private MailProperties mailProperties;
 
     public MailProperties getMailProperties() {

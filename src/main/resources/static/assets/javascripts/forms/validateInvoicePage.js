@@ -60,5 +60,5 @@ function validateInvoice(){
 
 }
  $('#dateInvoice').datepicker({
-     dateFormat: 'dd-mm-yyyy',
+     format: 'dd-MM-yyyy'
  });

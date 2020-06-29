@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html class="fixed" lang="en" xmlns:th="http://www.thymeleaf.org"   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html class="fixed" lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/html">
 <head th:include="template :: head">
     <title> User Profile Page</title>
     <meta name="keywords" content="HTML5 Admin Template" />
@@ -13,7 +14,7 @@
     <aside id="sidebar-left" class="sidebar-left" th:replace="template :: sidebar"></aside>
     <section role="main" class="content-body">
         <header class="page-header">
-            <h2>Add / Edit Client</h2>
+
             <div class="right-wrapper pull-right">
                 <ol class="breadcrumbs">
                     <li>
@@ -28,34 +29,41 @@
             </div>
         </header>
         <!-- start: page -->
+        <section class="panel">
+            <header class="panel-heading">
+                <div class="panel-actions">
+                    <a href="#" class="fa fa-caret-down"></a>
+                    <a href="#" class="fa fa-times"></a>
+                </div>
 
+                <h2 class="panel-title">Default</h2>
+            </header>
+            <div class="panel-body" >
+
+
+                <table class="small-table table table-bordered  mb-none" >
+                    <thead>
+                    <tr>
+                        <th>Statistics</th>
+                        <th>Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+
+                    <tr th:each="entry : ${map}">
+                        <td th:text="${entry.key}">key value</td>
+                        <td th:text="${entry.value}">key value</td>
+                    </tr>
+                    <!--</form>-->
+
+                    </tbody>
+                </table>
+            </div>
+        </section>
         <!-- end: page -->
     </section>
 </div>
-<script src="assets/vendor/jquery/jquery.js"></script>
-<script src="assets/vendor/jquery-browser-mobile/jquery.browser.mobile.js"></script>
-<script src="assets/vendor/bootstrap/js/bootstrap.js"></script>
-<script src="assets/vendor/nanoscroller/nanoscroller.js"></script>
-<script src="assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-<script src="assets/vendor/magnific-popup/magnific-popup.js"></script>
-<script src="assets/vendor/jquery-placeholder/jquery.placeholder.js"></script>
-
-<!-- Specific Page Vendor -->
-<script src="assets/vendor/select2/select2.js"></script>
-<script src="assets/vendor/jquery-datatables/media/js/jquery.dataTables.js"></script>
-<script src="assets/vendor/jquery-datatables-bs3/assets/js/datatables.js"></script>
-
-<!-- Theme Base, Components and Settings -->
-<script src="assets/javascripts/theme.js"></script>
-
-<!-- Theme Custom -->
-<script src="assets/javascripts/theme.custom.js"></script>
-
-<!-- Theme Initialization Files -->
-<script src="assets/javascripts/theme.init.js"></script>
-
-
-<!-- Examples -->
-<script src="assets/javascripts/tables/examples.datatables.editable.js"></script>
+<div th:include="template :: javascript-botom"></div>
 </body>
 </html>

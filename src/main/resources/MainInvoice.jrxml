@@ -54,7 +54,7 @@
 	</style>
 	<subDataset name="tableDataset" uuid="f13e6d36-5148-4ecc-bbe3-3035def80980"/>
 	<field name="invoiceID" class="java.lang.Long"/>
-	<field name="invoiceSeries" class="java.lang.Integer"/>
+	<field name="invoiceSeries" class="java.lang.String"/>
 	<field name="printDate" class="java.lang.String"/>
 	<field name="services" class="java.lang.String"/>
 	<field name="unityMeasure" class="java.lang.String"/>

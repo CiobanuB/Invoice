@@ -112,27 +112,27 @@
 
                             <div id="dialog" class="modal-block mfp-hide" >
                                 <form th:action="@{/clients/{id}/delete(id=${client.id})}" th:method="delete">
-                                <section class="panel">
-                                    <header class="panel-heading">
-                                        <h2 class="panel-title">Delete client</h2>
-                                    </header>
-                                    <div class="panel-body">
-                                        <div class="modal-wrapper">
-                                            <div class="modal-text">
-                                                <p>Are you sure that you want to delete client ?</p>
+                                    <section class="panel">
+                                        <header class="panel-heading">
+                                            <h2 class="panel-title">Delete client</h2>
+                                        </header>
+                                        <div class="panel-body">
+                                            <div class="modal-wrapper">
+                                                <div class="modal-text">
+                                                    <p>Are you sure that you want to delete client ?</p>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <footer class="panel-footer">
-                                        <div class="row">
-                                            <div class="col-md-12 text-right">
-                                                <a th:href="@{/clients/{id}/delete(id=${client.id})}"  class="btn btn-primary" >Delete</a>
-                                                <button type="submit" class="btn btn-default">Delete</button>
-                                                <button id="dialogCancel" class="btn btn-default">Cancel</button>
+                                        <footer class="panel-footer">
+                                            <div class="row">
+                                                <div class="col-md-12 text-right">
+                                                    <a th:href="@{/clients/{id}/delete(id=${client.id})}"  class="btn btn-primary" >Delete</a>
+                                                    <button type="submit" class="btn btn-default">Delete</button>
+                                                    <button id="dialogCancel" class="btn btn-default">Cancel</button>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </footer>
-                                </section>
+                                        </footer>
+                                    </section>
                                 </form>
                             </div>
 

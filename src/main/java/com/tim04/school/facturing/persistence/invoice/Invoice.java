@@ -2,12 +2,9 @@ package com.tim04.school.facturing.persistence.invoice;
 
 import com.tim04.school.facturing.persistence.client.Client;
 import com.tim04.school.facturing.persistence.supplier.Supplier;
-import com.tim04.school.facturing.persistence.user.User;
-import org.hibernate.annotations.Type;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -22,6 +19,7 @@ public class Invoice {
     @Column(name = "invoiceSeries")
     private String invoiceSeries;
     @Column(name = "printDate")
+    @DateTimeFormat(pattern = "yyyy/mm/dd")
     private String printDate;
     @Column(name = "clientName")
     private String clientName;
@@ -43,8 +41,30 @@ public class Invoice {
     @ManyToOne
     @JoinColumn(name="client_id")
     private Client client ;
+    private static Integer invoiceSeriesCounter = 0;
+
+     public static int getCurrentYear() {
+        //Date theDate = (Date) this.printDate.clone();
+        Date currentDate = new Date();
+        LocalDate date = currentDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return date.getYear();
+    }
+
+/*
+    public Date setPrintDate(String date) throws ParseException {
+        SimpleDateFormat theDate = new SimpleDateFormat("dd-MM-yyyy");
+        this.printDate = theDate.parse(date);
+        return this.printDate;
+    }
+    */
 
 
+    private static String invoiceSeriesGenerator (){
+
+        //String series = "FACT " + invoiceSeriesCounter + " " + getCurrentYear();
+        String series = invoiceSeriesCounter + "";
+        return series;
+    }
 
     public Long getId() {
         return id;
@@ -54,12 +74,14 @@ public class Invoice {
         this.id = id;
     }
 
-    public Integer getInvoiceSeries() {
+    public String getInvoiceSeries() {
         return invoiceSeries;
     }
 
-    public void setInvoiceSeries(Integer invoiceSeries) {
-        this.invoiceSeries = invoiceSeries;
+    public void setInvoiceSeries() {
+        this.invoiceSeriesCounter++;
+        String series = "FACT " + invoiceSeriesCounter + " " + getCurrentYear();
+        this.invoiceSeries = series;
     }
 
     public String getPrintDate() {
@@ -69,22 +91,6 @@ public class Invoice {
     public void setPrintDate(String printDate) {
         this.printDate = printDate;
     }
-    /* public Date getPrintDate() {
-        Date date = (Date) this.printDate.clone();
-        return date;
-    }
-
-    public int getMonthDate() {
-        Date theDate = (Date) this.printDate.clone();
-        LocalDate date = theDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        return date.getMonthValue();
-    }
-
-    public Date setPrintDate(String date) throws ParseException {
-        SimpleDateFormat theDate = new SimpleDateFormat("dd-MM-yyyy");
-        this.printDate = theDate.parse(date);
-        return this.printDate;
-    }*/
 
     public String getClientName() {
         return clientName;
@@ -100,10 +106,6 @@ public class Invoice {
 
     public void setUnityMeasure(String unityMeasure) {
         this.unityMeasure = unityMeasure;
-    }
-
-    public void setTotalPrice(Integer totalPrice) {
-        this.totalPrice = totalPrice;
     }
 
     public Integer getSum() {
@@ -142,10 +144,9 @@ public class Invoice {
         return totalPrice;
     }
 
-    public void setTotalPrice() {
-        this.totalPrice = this.unitPrice * this.pieces;
+    public void setTotalPrice(Integer totalPrice) {
+        this.totalPrice = totalPrice;
     }
-
 
     public Supplier getSupplier() {
         return supplier;
@@ -162,7 +163,4 @@ public class Invoice {
     public void setClient(Client client) {
         this.client = client;
     }
-
-
-
 }

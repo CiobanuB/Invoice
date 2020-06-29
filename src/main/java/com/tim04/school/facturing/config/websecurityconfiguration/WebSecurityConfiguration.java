@@ -1,4 +1,4 @@
-package com.tim04.school.facturing.config;
+package com.tim04.school.facturing.config.websecurityconfiguration;
 
 import com.tim04.school.facturing.user.login.MyUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;

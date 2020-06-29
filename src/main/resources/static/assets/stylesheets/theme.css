@@ -12413,6 +12413,9 @@ html.dark .simple-compose-box .compose-box-footer {
 .table {
 	width: 100%;
 }
+.small-table{
+width: 50%;
+}
 
 .table .table {
 	background: transparent;
