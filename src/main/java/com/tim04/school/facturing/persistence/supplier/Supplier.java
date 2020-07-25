@@ -1,7 +1,7 @@
 package com.tim04.school.facturing.persistence.supplier;
 
 import com.tim04.school.facturing.persistence.client.Client;
-import com.tim04.school.facturing.persistence.invoice.Invoice;
+import com.tim04.school.facturing.persistence.invoice.invoice.Invoice;
 import com.tim04.school.facturing.persistence.user.User;
 
 import javax.persistence.*;

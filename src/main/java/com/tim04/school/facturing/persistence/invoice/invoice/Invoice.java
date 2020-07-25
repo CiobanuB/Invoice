@@ -1,6 +1,7 @@
-package com.tim04.school.facturing.persistence.invoice;
+package com.tim04.school.facturing.persistence.invoice.invoice;
 
 import com.tim04.school.facturing.persistence.client.Client;
+import com.tim04.school.facturing.persistence.invoice.invoiceSeries.InvoiceSeries;
 import com.tim04.school.facturing.persistence.supplier.Supplier;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -16,8 +17,6 @@ public class Invoice {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(name = "invoiceSeries")
-    private String invoiceSeries;
     @Column(name = "printDate")
     @DateTimeFormat(pattern = "yyyy/mm/dd")
     private String printDate;
@@ -36,34 +35,19 @@ public class Invoice {
     @Column(name = "totalPrice")
     private Integer totalPrice;
     @ManyToOne
-    @JoinColumn(name="supplier_id")
-    private Supplier supplier ;
+    @JoinColumn(name = "supplier_id")
+    private Supplier supplier;
     @ManyToOne
-    @JoinColumn(name="client_id")
-    private Client client ;
-    private static Integer invoiceSeriesCounter = 0;
+    @JoinColumn(name = "client_id")
+    private Client client;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "invoice")
+    @JoinColumn(name = "invoiceSeries_id")
+    private InvoiceSeries invoiceSeries;
 
-     public static int getCurrentYear() {
-        //Date theDate = (Date) this.printDate.clone();
+    public static int getCurrentYear() {
         Date currentDate = new Date();
         LocalDate date = currentDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         return date.getYear();
-    }
-
-/*
-    public Date setPrintDate(String date) throws ParseException {
-        SimpleDateFormat theDate = new SimpleDateFormat("dd-MM-yyyy");
-        this.printDate = theDate.parse(date);
-        return this.printDate;
-    }
-    */
-
-
-    private static String invoiceSeriesGenerator (){
-
-        //String series = "FACT " + invoiceSeriesCounter + " " + getCurrentYear();
-        String series = invoiceSeriesCounter + "";
-        return series;
     }
 
     public Long getId() {
@@ -72,16 +56,6 @@ public class Invoice {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getInvoiceSeries() {
-        return invoiceSeries;
-    }
-
-    public void setInvoiceSeries() {
-        this.invoiceSeriesCounter++;
-        String series = "FACT " + invoiceSeriesCounter + " " + getCurrentYear();
-        this.invoiceSeries = series;
     }
 
     public String getPrintDate() {
@@ -162,5 +136,13 @@ public class Invoice {
 
     public void setClient(Client client) {
         this.client = client;
+    }
+
+    public InvoiceSeries getInvoiceSeries() {
+        return invoiceSeries;
+    }
+
+    public void setInvoiceSeries(InvoiceSeries invoiceSeries) {
+        this.invoiceSeries = invoiceSeries;
     }
 }

@@ -1,7 +1,7 @@
 package com.tim04.school.facturing.service.supplier;
 
-import com.tim04.school.facturing.persistence.client.Client;
-import com.tim04.school.facturing.persistence.invoice.Invoice;
+import com.tim04.school.facturing.persistence.invoice.invoice.Invoice;
+import com.tim04.school.facturing.persistence.invoice.invoiceSeries.InvoiceSeries;
 import com.tim04.school.facturing.persistence.supplier.Supplier;
 import com.tim04.school.facturing.persistence.supplier.SupplierRepository;
 import com.tim04.school.facturing.persistence.user.User;
@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -71,7 +69,8 @@ public class SupplierService {
     }
 
     public Map<String, Object> supplierMap(Invoice invoice,Map<String,Object> supplierItems) {
-        Optional<Invoice> optionalInvoice = invoiceService.getInvoiceSeries(invoice.getInvoiceSeries());
+        InvoiceSeries invoiceSeries = invoice.getInvoiceSeries();
+        Optional<Invoice> optionalInvoice = invoiceService.getInvoiceSeries(invoiceSeries);
         Invoice findInvoice = optionalInvoice.get();
         Supplier supplier = findInvoice.getSupplier();
         User loggedUser = userService.findLogged();

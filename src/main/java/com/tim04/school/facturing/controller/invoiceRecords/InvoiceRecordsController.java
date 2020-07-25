@@ -1,6 +1,6 @@
 package com.tim04.school.facturing.controller.invoiceRecords;
 
-import com.tim04.school.facturing.persistence.invoice.Invoice;
+import com.tim04.school.facturing.persistence.invoice.invoice.Invoice;
 import com.tim04.school.facturing.service.invoice.InvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

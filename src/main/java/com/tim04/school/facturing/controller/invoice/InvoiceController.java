@@ -1,7 +1,7 @@
 package com.tim04.school.facturing.controller.invoice;
 
 import com.tim04.school.facturing.persistence.client.Client;
-import com.tim04.school.facturing.persistence.invoice.Invoice;
+import com.tim04.school.facturing.persistence.invoice.invoice.Invoice;
 import com.tim04.school.facturing.persistence.supplier.Supplier;
 import com.tim04.school.facturing.persistence.user.User;
 import com.tim04.school.facturing.service.client.ClientService;

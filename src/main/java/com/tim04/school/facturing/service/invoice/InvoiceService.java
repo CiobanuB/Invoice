@@ -1,8 +1,9 @@
 package com.tim04.school.facturing.service.invoice;
 
 import com.tim04.school.facturing.persistence.client.Client;
-import com.tim04.school.facturing.persistence.invoice.Invoice;
-import com.tim04.school.facturing.persistence.invoice.InvoiceRepository;
+import com.tim04.school.facturing.persistence.invoice.invoice.Invoice;
+import com.tim04.school.facturing.persistence.invoice.invoice.InvoiceRepository;
+import com.tim04.school.facturing.persistence.invoice.invoiceSeries.InvoiceSeries;
 import com.tim04.school.facturing.persistence.supplier.Supplier;
 import com.tim04.school.facturing.persistence.user.User;
 import com.tim04.school.facturing.service.client.ClientService;
@@ -21,7 +22,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -62,11 +62,12 @@ public class InvoiceService {
 
     @Transactional
     public void save(Invoice invoice) throws ParseException {
+        InvoiceSeries invoiceSeries = new InvoiceSeries();
         Supplier supplier = supplierService.getTheSupplier();
         Optional<Client> optionalClient = clientService.findClientByName(invoice.getClientName());
         Client client = optionalClient.get();
         if (optionalClient.isPresent()) invoice.setClient(client);
-        invoice.setInvoiceSeries();
+        invoice.setInvoiceSeries(invoiceSeries);
         invoice.setSupplier(supplier);
         invoiceRepository.save(invoice);
     }
@@ -185,7 +186,7 @@ public class InvoiceService {
     }
 
     public Map<String, Object> invoiceMap(Invoice invoice, Map<String, Object> invoiceItems) {
-        Optional<Invoice> optionalInvoice = invoiceRepository.findInvoiceByinvoiceSeries(invoice.getInvoiceSeries());
+        Optional<Invoice> optionalInvoice = invoiceRepository.findInvoiceByInvoiceSeries(invoice.getInvoiceSeries());
         if (optionalInvoice.isPresent()) {
             invoiceItems.put("invoiceID", invoice.getId());
             invoiceItems.put("services", invoice.getServices());
@@ -214,8 +215,8 @@ public class InvoiceService {
         return getAllInvoices;
     }
 
-    public Optional<Invoice> getInvoiceSeries(String seriesId) {
-        Optional<Invoice> optionalInvoice = invoiceRepository.findInvoiceByinvoiceSeries(seriesId);
+    public Optional<Invoice> getInvoiceSeries(InvoiceSeries invoiceseries) {
+        Optional<Invoice> optionalInvoice = invoiceRepository.findInvoiceByInvoiceSeries(invoiceseries);
         if (!optionalInvoice.isPresent()) return Optional.empty();
         return optionalInvoice;
     }

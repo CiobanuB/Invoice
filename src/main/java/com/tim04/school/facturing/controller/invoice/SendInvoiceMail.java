@@ -1,12 +1,10 @@
 package com.tim04.school.facturing.controller.invoice;
 
-import com.tim04.school.facturing.persistence.client.Client;
-import com.tim04.school.facturing.persistence.invoice.Invoice;
+import com.tim04.school.facturing.persistence.invoice.invoice.Invoice;
 import com.tim04.school.facturing.service.invoice.InvoiceService;
 import com.tim04.school.facturing.user.tokenService.MailPropService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;

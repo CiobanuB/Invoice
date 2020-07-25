@@ -2,7 +2,7 @@ package com.tim04.school.facturing.service.client;
 
 import com.tim04.school.facturing.persistence.client.Client;
 import com.tim04.school.facturing.persistence.client.ClientRepository;
-import com.tim04.school.facturing.persistence.invoice.Invoice;
+import com.tim04.school.facturing.persistence.invoice.invoice.Invoice;
 import com.tim04.school.facturing.persistence.supplier.Supplier;
 import com.tim04.school.facturing.persistence.user.User;
 import com.tim04.school.facturing.service.invoice.InvoiceService;
@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
 import java.text.ParseException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

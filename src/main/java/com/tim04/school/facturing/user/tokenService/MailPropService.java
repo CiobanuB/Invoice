@@ -1,7 +1,7 @@
 package com.tim04.school.facturing.user.tokenService;
 
 import com.tim04.school.facturing.persistence.client.Client;
-import com.tim04.school.facturing.persistence.invoice.Invoice;
+import com.tim04.school.facturing.persistence.invoice.invoice.Invoice;
 import com.tim04.school.facturing.persistence.supplier.Supplier;
 import com.tim04.school.facturing.persistence.user.mailProperties.MailProperties;
 import com.tim04.school.facturing.persistence.user.mailProperties.MailPropertiesRepository;
@@ -24,7 +24,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import javax.swing.text.html.Option;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;

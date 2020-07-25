@@ -16,3 +16,8 @@ $('#addInvoiceModal').on('show.bs.modal', function (event) {
   modal.find('.modal-title').text('New message to ' + recipient)
   modal.find('.modal-body input').val(recipient)
 })
+
+$('#delete-modal').on('show.bs.modal', function (event) {
+  var clientVal = $(event.relatedTarget).data('val');
+  $(this).find(".modal-body").text(clientVal);
+});

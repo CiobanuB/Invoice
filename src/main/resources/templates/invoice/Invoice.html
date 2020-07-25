@@ -69,7 +69,7 @@
                 <div class="row">
                 <div class="col-sm-3">
                     <div class="mb-md">
-                        <a th:action="@{/Invoice/addInvoice}" class="btn btn-primary" data-toggle="modal" data-target="#addInvoiceModal" >Add <i class="fa fa-plus"></i></a>
+                        <a th:action="@{/Invoice/addInvoice}" class="btn btn-primary" data-toggle="modal" data-target="#addInvoiceModal"  >Add <i class="fa fa-plus"></i></a>
                     </div>
                 </div>
                 <div class="col-sm-9">
@@ -105,7 +105,6 @@
                                 <a th:href="@{/Invoice/{id}/generateInvoice(id=${invoice.id})}"  ><i class="fa fa-pencil"></i> </a>
                                 <a th:href="@{/Invoice/{id}/Send-invoice(id=${invoice.id})}"  ><i class="fa fa-paper-plane"></i> </a>
                                 <a href="#" class="on-default remove-row"><i class="fa fa-trash-o"></i></a>
-
 
                             </td>
                     </tr>
