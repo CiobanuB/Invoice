@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.hellokoding.springboot</groupId>
-    <artifactId>email.verification</artifactId>
+    <!--<artifactId>email.verification</artifactId>-->
 
    <!-- <groupId>com.tim04</groupId>-->
     <artifactId>school.facturing</artifactId>

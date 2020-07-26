@@ -16,7 +16,7 @@ public class InvoiceSeries {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @OneToOne( mappedBy="InvoiceSeries",cascade=CascadeType.ALL)
+    @OneToOne( cascade=CascadeType.ALL)
     @JoinColumn(name="invoice_id")
     private Invoice invoice;
     @Column(name = "invoiceSeries")
