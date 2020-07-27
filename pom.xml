@@ -8,9 +8,10 @@
         <version>2.2.2.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+    <groupId>com.hellokoding.springboot</groupId>
+    <!--<artifactId>email.verification</artifactId>-->
 
-
-    <groupId>com.tim04</groupId>
+   <!-- <groupId>com.tim04</groupId>-->
     <artifactId>school.facturing</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>school.facturing</name>
@@ -114,11 +115,11 @@
             <artifactId>jasperreports</artifactId>
             <version>6.9.0</version>
         </dependency>
-        <dependency>
+      <!--  <dependency>
             <groupId>com.hellokoding.springboot</groupId>
             <artifactId>email.verification</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity</artifactId>
